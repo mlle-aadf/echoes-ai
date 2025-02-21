@@ -4,8 +4,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MessageSquare, Loader } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { MessageSquare, Loader, ChevronDown, ChevronUp } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { queryOpenAI, queryAnthropicClaude, queryGemini } from "@/lib/ai-clients";
+
+interface AIModel {
+  id: string;
+  name: string;
+  queryFn: (prompt: string) => Promise<AIResponse>;
+}
 
 interface AIResponse {
   model: string;
@@ -17,7 +25,15 @@ export default function MultiAIQuery() {
   const [prompt, setPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [responses, setResponses] = useState<AIResponse[]>([]);
+  const [expandedCards, setExpandedCards] = useState<string[]>([]);
+  const [selectedModels, setSelectedModels] = useState<string[]>(["gpt4", "claude", "gemini"]);
   const { toast } = useToast();
+
+  const availableModels: AIModel[] = [
+    { id: "gpt4", name: "GPT-4", queryFn: queryOpenAI },
+    { id: "claude", name: "Claude", queryFn: queryAnthropicClaude },
+    { id: "gemini", name: "Gemini", queryFn: queryGemini },
+  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,22 +46,34 @@ export default function MultiAIQuery() {
       return;
     }
 
+    if (selectedModels.length === 0) {
+      toast({
+        title: "Error",
+        description: "Please select at least one AI model",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
     setResponses([]);
 
     try {
-      const results = await Promise.allSettled([
-        queryOpenAI(prompt),
-        queryAnthropicClaude(prompt),
-        queryGemini(prompt),
-      ]);
+      const selectedModelQueries = availableModels
+        .filter(model => selectedModels.includes(model.id))
+        .map(model => model.queryFn(prompt));
+
+      const results = await Promise.allSettled(selectedModelQueries);
 
       const formattedResponses = results.map((result, index) => {
+        const modelId = selectedModels[index];
+        const modelName = availableModels.find(m => m.id === modelId)?.name || "Unknown";
+        
         if (result.status === "fulfilled") {
           return result.value;
         } else {
           return {
-            model: getModelName(index),
+            model: modelName,
             response: "",
             error: "Failed to get response",
           };
@@ -53,6 +81,7 @@ export default function MultiAIQuery() {
       });
 
       setResponses(formattedResponses);
+      setExpandedCards(selectedModels); // Expand all cards by default
     } catch (error) {
       toast({
         title: "Error",
@@ -64,9 +93,20 @@ export default function MultiAIQuery() {
     }
   };
 
-  const getModelName = (index: number) => {
-    const models = ["GPT-4", "Claude", "Gemini"];
-    return models[index];
+  const toggleCard = (modelId: string) => {
+    setExpandedCards(prev => 
+      prev.includes(modelId) 
+        ? prev.filter(id => id !== modelId)
+        : [...prev, modelId]
+    );
+  };
+
+  const toggleModel = (modelId: string) => {
+    setSelectedModels(prev => 
+      prev.includes(modelId) 
+        ? prev.filter(id => id !== modelId)
+        : [...prev, modelId]
+    );
   };
 
   return (
@@ -74,6 +114,27 @@ export default function MultiAIQuery() {
       <h1 className="text-3xl font-bold text-center mb-8">Multi-AI Query</h1>
       
       <form onSubmit={handleSubmit} className="max-w-2xl mx-auto mb-8">
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold mb-2">Select AI Models</h2>
+          <div className="flex flex-wrap gap-4">
+            {availableModels.map((model) => (
+              <div key={model.id} className="flex items-center space-x-2">
+                <Checkbox
+                  id={model.id}
+                  checked={selectedModels.includes(model.id)}
+                  onCheckedChange={() => toggleModel(model.id)}
+                />
+                <label
+                  htmlFor={model.id}
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {model.name}
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <Textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
@@ -88,21 +149,21 @@ export default function MultiAIQuery() {
           {isLoading ? (
             <>
               <Loader className="mr-2 h-4 w-4 animate-spin" />
-              Querying AIs...
+              Querying Selected AIs...
             </>
           ) : (
             <>
               <MessageSquare className="mr-2 h-4 w-4" />
-              Query All AIs
+              Query Selected AIs
             </>
           )}
         </Button>
       </form>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {isLoading ? (
-          Array(3).fill(0).map((_, i) => (
-            <Card key={i} className="w-full">
+          selectedModels.map((modelId) => (
+            <Card key={modelId} className="w-full">
               <CardHeader>
                 <CardTitle>
                   <Skeleton className="h-4 w-24" />
@@ -114,23 +175,37 @@ export default function MultiAIQuery() {
             </Card>
           ))
         ) : (
-          responses.map((response, index) => (
-            <Card key={index} className="w-full">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MessageSquare className="h-4 w-4" />
-                  {response.model}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {response.error ? (
-                  <p className="text-destructive">{response.error}</p>
-                ) : (
-                  <p className="whitespace-pre-wrap">{response.response}</p>
+          responses.map((response, index) => {
+            const modelId = selectedModels[index];
+            const isExpanded = expandedCards.includes(modelId);
+
+            return (
+              <Card key={modelId} className="w-full">
+                <CardHeader className="cursor-pointer" onClick={() => toggleCard(modelId)}>
+                  <CardTitle className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <MessageSquare className="h-4 w-4" />
+                      {response.model}
+                    </div>
+                    {isExpanded ? (
+                      <ChevronUp className="h-4 w-4" />
+                    ) : (
+                      <ChevronDown className="h-4 w-4" />
+                    )}
+                  </CardTitle>
+                </CardHeader>
+                {isExpanded && (
+                  <CardContent>
+                    {response.error ? (
+                      <p className="text-destructive">{response.error}</p>
+                    ) : (
+                      <p className="whitespace-pre-wrap">{response.response}</p>
+                    )}
+                  </CardContent>
                 )}
-              </CardContent>
-            </Card>
-          ))
+              </Card>
+            )
+          })
         )}
       </div>
     </div>

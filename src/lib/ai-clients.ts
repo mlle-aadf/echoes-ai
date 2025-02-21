@@ -2,7 +2,13 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Anthropic from "@anthropic-ai/sdk";
 
-export async function queryOpenAI(prompt: string) {
+export interface AIResponse {
+  model: string;
+  response: string;
+  error?: string;
+}
+
+export async function queryOpenAI(prompt: string): Promise<AIResponse> {
   try {
     const response = await fetch("/api/generate", {
       method: "POST",
@@ -25,7 +31,7 @@ export async function queryOpenAI(prompt: string) {
   }
 }
 
-export async function queryAnthropicClaude(prompt: string) {
+export async function queryAnthropicClaude(prompt: string): Promise<AIResponse> {
   const anthropic = new Anthropic({
     apiKey: localStorage.getItem("ANTHROPIC_API_KEY") || "",
   });
@@ -47,18 +53,17 @@ export async function queryAnthropicClaude(prompt: string) {
   }
 }
 
-export async function queryGemini(prompt: string) {
+export async function queryGemini(prompt: string): Promise<AIResponse> {
   const genAI = new GoogleGenerativeAI(localStorage.getItem("GEMINI_API_KEY") || "");
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
   try {
     const result = await model.generateContent(prompt);
     const response = result.response;
-    const text = response.text();
-
+    
     return {
       model: "Gemini",
-      response: text,
+      response: response.text(),
     };
   } catch (error) {
     console.error("Gemini Error:", error);
