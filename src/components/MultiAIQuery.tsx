@@ -1,13 +1,13 @@
-
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { MessageSquare, Loader, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { queryOpenAI, queryAnthropicClaude, queryGemini } from "@/lib/ai-clients";
+import { queryAnthropicClaude, queryBingChat, queryDeepL, queryDeepSeekCoder, queryGemini, queryGoogleBard, queryGoogleTranslate, queryGPT4CodeInterpreter, queryIBMWatsonx, queryMistral, queryOpenAI, queryOpenAICodex, queryPerplexity } from "@/lib/ai-clients";
+import { ChevronDown, ChevronUp, Loader, MessageSquare, Sparkles } from "lucide-react";
+import { useState } from "react";
+import TaskSelector from "./ui/task-selector";
 
 interface AIModel {
   id: string;
@@ -33,6 +33,16 @@ export default function MultiAIQuery() {
     { id: "gpt4", name: "GPT-4", queryFn: queryOpenAI },
     { id: "claude", name: "Claude", queryFn: queryAnthropicClaude },
     { id: "gemini", name: "Gemini", queryFn: queryGemini },
+    { id: "perplexity", name: "Perplexity AI", queryFn: queryPerplexity },
+    { id: "bingchat", name: "Bing Chat", queryFn: queryBingChat },
+    { id: "googlebard", name: "Google Bard", queryFn: queryGoogleBard },
+    { id: "deepl", name: "DeepL", queryFn: queryDeepL },
+    { id: "googletranslate", name: "Google Translate", queryFn: queryGoogleTranslate },
+    { id: "openai_codex", name: "OpenAI Codex", queryFn: queryOpenAICodex },
+    { id: "deepseek_coder", name: "DeepSeek Coder", queryFn: queryDeepSeekCoder },
+    { id: "gpt4_code_interpreter", name: "GPT-4 (Code Interpreter)", queryFn: queryGPT4CodeInterpreter },
+    { id: "ibm_watsonx", name: "IBM Watsonx", queryFn: queryIBMWatsonx },
+    { id: "mistral", name: "Mistral", queryFn: queryMistral }
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -118,6 +128,8 @@ export default function MultiAIQuery() {
           Multi-AI Query
         </h1>
         
+        <TaskSelector/>
+
         <form onSubmit={handleSubmit} className="flex flex-col h-full">
           <div className="mb-6">
             <h2 className="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-300">Select AI Models</h2>
