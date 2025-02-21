@@ -110,103 +110,116 @@ export default function MultiAIQuery() {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold text-center mb-8">Multi-AI Query</h1>
-      
-      <form onSubmit={handleSubmit} className="max-w-2xl mx-auto mb-8">
-        <div className="mb-4">
-          <h2 className="text-lg font-semibold mb-2">Select AI Models</h2>
-          <div className="flex flex-wrap gap-4">
-            {availableModels.map((model) => (
-              <div key={model.id} className="flex items-center space-x-2">
-                <Checkbox
-                  id={model.id}
-                  checked={selectedModels.includes(model.id)}
-                  onCheckedChange={() => toggleModel(model.id)}
-                />
-                <label
-                  htmlFor={model.id}
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  {model.name}
-                </label>
-              </div>
-            ))}
+    <div className="flex h-screen overflow-hidden">
+      {/* Left Panel */}
+      <div className="w-80 border-r bg-muted/10 p-6 flex flex-col">
+        <h1 className="text-2xl font-bold mb-6">Multi-AI Query</h1>
+        
+        <form onSubmit={handleSubmit} className="flex flex-col h-full">
+          <div className="mb-6">
+            <h2 className="text-lg font-semibold mb-3">Select AI Models</h2>
+            <div className="space-y-3">
+              {availableModels.map((model) => (
+                <div key={model.id} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={model.id}
+                    checked={selectedModels.includes(model.id)}
+                    onCheckedChange={() => toggleModel(model.id)}
+                  />
+                  <label
+                    htmlFor={model.id}
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    {model.name}
+                  </label>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <Textarea
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          placeholder="Enter your prompt here..."
-          className="min-h-[100px] mb-4"
-        />
-        <Button 
-          type="submit" 
-          className="w-full"
-          disabled={isLoading}
+          <div className="flex-grow flex flex-col">
+            <Textarea
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              placeholder="Enter your prompt here..."
+              className="flex-grow mb-4 min-h-[200px] resize-none"
+            />
+            <Button 
+              type="submit" 
+              className="w-full"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader className="mr-2 h-4 w-4 animate-spin" />
+                  Querying...
+                </>
+              ) : (
+                <>
+                  <MessageSquare className="mr-2 h-4 w-4" />
+                  Query Selected AIs
+                </>
+              )}
+            </Button>
+          </div>
+        </form>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="flex-1 overflow-y-auto p-6">
+        <div 
+          className="grid gap-6" 
+          style={{
+            gridTemplateColumns: `repeat(${Math.max(1, selectedModels.length)}, minmax(0, 1fr))`
+          }}
         >
           {isLoading ? (
-            <>
-              <Loader className="mr-2 h-4 w-4 animate-spin" />
-              Querying Selected AIs...
-            </>
-          ) : (
-            <>
-              <MessageSquare className="mr-2 h-4 w-4" />
-              Query Selected AIs
-            </>
-          )}
-        </Button>
-      </form>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {isLoading ? (
-          selectedModels.map((modelId) => (
-            <Card key={modelId} className="w-full">
-              <CardHeader>
-                <CardTitle>
-                  <Skeleton className="h-4 w-24" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-24 w-full" />
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          responses.map((response, index) => {
-            const modelId = selectedModels[index];
-            const isExpanded = expandedCards.includes(modelId);
-
-            return (
-              <Card key={modelId} className="w-full">
-                <CardHeader className="cursor-pointer" onClick={() => toggleCard(modelId)}>
-                  <CardTitle className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <MessageSquare className="h-4 w-4" />
-                      {response.model}
-                    </div>
-                    {isExpanded ? (
-                      <ChevronUp className="h-4 w-4" />
-                    ) : (
-                      <ChevronDown className="h-4 w-4" />
-                    )}
+            selectedModels.map((modelId) => (
+              <Card key={modelId} className="w-full h-full">
+                <CardHeader>
+                  <CardTitle>
+                    <Skeleton className="h-4 w-24" />
                   </CardTitle>
                 </CardHeader>
-                {isExpanded && (
-                  <CardContent>
-                    {response.error ? (
-                      <p className="text-destructive">{response.error}</p>
-                    ) : (
-                      <p className="whitespace-pre-wrap">{response.response}</p>
-                    )}
-                  </CardContent>
-                )}
+                <CardContent>
+                  <Skeleton className="h-24 w-full" />
+                </CardContent>
               </Card>
-            )
-          })
-        )}
+            ))
+          ) : (
+            responses.map((response, index) => {
+              const modelId = selectedModels[index];
+              const isExpanded = expandedCards.includes(modelId);
+
+              return (
+                <Card key={modelId} className="w-full h-full">
+                  <CardHeader className="cursor-pointer" onClick={() => toggleCard(modelId)}>
+                    <CardTitle className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <MessageSquare className="h-4 w-4" />
+                        {response.model}
+                      </div>
+                      {isExpanded ? (
+                        <ChevronUp className="h-4 w-4" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4" />
+                      )}
+                    </CardTitle>
+                  </CardHeader>
+                  {isExpanded && (
+                    <CardContent>
+                      {response.error ? (
+                        <p className="text-destructive">{response.error}</p>
+                      ) : (
+                        <p className="whitespace-pre-wrap">{response.response}</p>
+                      )}
+                    </CardContent>
+                  )}
+                </Card>
+              );
+            })
+          )}
+        </div>
       </div>
     </div>
   );
