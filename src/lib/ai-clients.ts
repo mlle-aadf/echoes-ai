@@ -60,11 +60,11 @@ export async function queryGemini(prompt: string): Promise<AIResponse> {
   try {
     const result = await model.generateContent(prompt);
     const response = result.response;
-    const text = response.text();
+    const generatedText = response.text ? response.text() : "";
     
     return {
       model: "Gemini",
-      response: text,
+      response: generatedText,
     };
   } catch (error) {
     console.error("Gemini Error:", error);

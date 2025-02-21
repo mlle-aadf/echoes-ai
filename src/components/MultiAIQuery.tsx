@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Checkbox } from "@/components/ui/checkbox";
-import { MessageSquare, Loader, ChevronDown, ChevronUp } from "lucide-react";
+import { MessageSquare, Loader, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { queryOpenAI, queryAnthropicClaude, queryGemini } from "@/lib/ai-clients";
 
@@ -110,25 +110,29 @@ export default function MultiAIQuery() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
       {/* Left Panel */}
-      <div className="w-80 border-r bg-muted/10 p-6 flex flex-col">
-        <h1 className="text-2xl font-bold mb-6">Multi-AI Query</h1>
+      <div className="w-80 border-r bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-6 flex flex-col shadow-lg">
+        <h1 className="text-2xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent flex items-center gap-2">
+          <Sparkles className="h-6 w-6 text-purple-600" />
+          Multi-AI Query
+        </h1>
         
         <form onSubmit={handleSubmit} className="flex flex-col h-full">
           <div className="mb-6">
-            <h2 className="text-lg font-semibold mb-3">Select AI Models</h2>
+            <h2 className="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-300">Select AI Models</h2>
             <div className="space-y-3">
               {availableModels.map((model) => (
-                <div key={model.id} className="flex items-center space-x-2">
+                <div key={model.id} className="flex items-center space-x-2 hover:bg-purple-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
                   <Checkbox
                     id={model.id}
                     checked={selectedModels.includes(model.id)}
                     onCheckedChange={() => toggleModel(model.id)}
+                    className="border-purple-400 data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600"
                   />
                   <label
                     htmlFor={model.id}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                   >
                     {model.name}
                   </label>
@@ -142,11 +146,11 @@ export default function MultiAIQuery() {
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Enter your prompt here..."
-              className="flex-grow mb-4 min-h-[200px] resize-none"
+              className="flex-grow mb-4 min-h-[200px] resize-none border-purple-200 focus-visible:ring-purple-400 bg-white/50 dark:bg-gray-900/50"
             />
             <Button 
               type="submit" 
-              className="w-full"
+              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-md hover:shadow-lg"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -175,7 +179,7 @@ export default function MultiAIQuery() {
         >
           {isLoading ? (
             selectedModels.map((modelId) => (
-              <Card key={modelId} className="w-full h-full">
+              <Card key={modelId} className="w-full h-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-purple-100 dark:border-gray-700 shadow-lg">
                 <CardHeader>
                   <CardTitle>
                     <Skeleton className="h-4 w-24" />
@@ -192,26 +196,26 @@ export default function MultiAIQuery() {
               const isExpanded = expandedCards.includes(modelId);
 
               return (
-                <Card key={modelId} className="w-full h-full">
-                  <CardHeader className="cursor-pointer" onClick={() => toggleCard(modelId)}>
-                    <CardTitle className="flex items-center justify-between">
+                <Card key={modelId} className="w-full h-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-purple-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                  <CardHeader className="cursor-pointer hover:bg-purple-50/50 dark:hover:bg-gray-800/50 transition-colors rounded-t-lg" onClick={() => toggleCard(modelId)}>
+                    <CardTitle className="flex items-center justify-between text-gray-700 dark:text-gray-300">
                       <div className="flex items-center gap-2">
-                        <MessageSquare className="h-4 w-4" />
+                        <MessageSquare className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                         {response.model}
                       </div>
                       {isExpanded ? (
-                        <ChevronUp className="h-4 w-4" />
+                        <ChevronUp className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                       ) : (
-                        <ChevronDown className="h-4 w-4" />
+                        <ChevronDown className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                       )}
                     </CardTitle>
                   </CardHeader>
                   {isExpanded && (
                     <CardContent>
                       {response.error ? (
-                        <p className="text-destructive">{response.error}</p>
+                        <p className="text-red-500 dark:text-red-400">{response.error}</p>
                       ) : (
-                        <p className="whitespace-pre-wrap">{response.response}</p>
+                        <p className="whitespace-pre-wrap text-gray-600 dark:text-gray-300 leading-relaxed">{response.response}</p>
                       )}
                     </CardContent>
                   )}
