@@ -1,5 +1,6 @@
-import Anthropic from "@anthropic-ai/sdk";
+
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import Anthropic from "@anthropic-ai/sdk";
 
 export interface AIResponse {
   model: string;
@@ -7,36 +8,45 @@ export interface AIResponse {
   error?: string;
 }
 
-async function fetchAIResponse(url: string, prompt: string, model: string): Promise<AIResponse> {
+export async function queryOpenAI(prompt: string): Promise<AIResponse> {
+  if (!localStorage.getItem("OPENAI_API_KEY")) {
+    throw new Error("OpenAI API key not found");
+  }
+
   try {
-    const response = await fetch(url, {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("OPENAI_API_KEY")}`,
       },
-      body: JSON.stringify({ prompt }),
+      body: JSON.stringify({
+        model: "gpt-4-turbo-preview",
+        messages: [{ role: "user", content: prompt }],
+      }),
     });
 
-    if (!response.ok) throw new Error(`Failed to query ${model}`);
+    if (!response.ok) throw new Error("Failed to query OpenAI");
     const data = await response.json();
-
+    
     return {
-      model,
-      response: data.generatedText,
+      model: "GPT-4",
+      response: data.choices[0].message.content,
     };
   } catch (error) {
-    console.error(`${model} Error:`, error);
+    console.error("OpenAI Error:", error);
     throw error;
   }
 }
 
-export async function queryOpenAI(prompt: string): Promise<AIResponse> {
-  return fetchAIResponse("/api/generate", prompt, "GPT-4");
-}
-
 export async function queryAnthropicClaude(prompt: string): Promise<AIResponse> {
+  const apiKey = localStorage.getItem("ANTHROPIC_API_KEY");
+  if (!apiKey) {
+    throw new Error("Anthropic API key not found");
+  }
+
   const anthropic = new Anthropic({
-    apiKey: localStorage.getItem("ANTHROPIC_API_KEY") || "",
+    apiKey,
   });
 
   try {
@@ -57,60 +67,25 @@ export async function queryAnthropicClaude(prompt: string): Promise<AIResponse> 
 }
 
 export async function queryGemini(prompt: string): Promise<AIResponse> {
-  const genAI = new GoogleGenerativeAI(localStorage.getItem("GEMINI_API_KEY") || "");
+  const apiKey = localStorage.getItem("GEMINI_API_KEY");
+  if (!apiKey) {
+    throw new Error("Gemini API key not found");
+  }
+
+  const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
   try {
     const result = await model.generateContent(prompt);
     const response = result.response;
-    const generatedText = response.text ? response.text() : "";
-
+    const text = response.text();
+    
     return {
       model: "Gemini",
-      response: generatedText,
+      response: text,
     };
   } catch (error) {
     console.error("Gemini Error:", error);
     throw error;
   }
-}
-
-export async function queryPerplexity(prompt: string): Promise<AIResponse> {
-  return fetchAIResponse("/api/perplexity", prompt, "Perplexity AI");
-}
-
-export async function queryBingChat(prompt: string): Promise<AIResponse> {
-  return fetchAIResponse("/api/bingchat", prompt, "Bing Chat");
-}
-
-export async function queryGoogleBard(prompt: string): Promise<AIResponse> {
-  return fetchAIResponse("/api/googlebard", prompt, "Google Bard");
-}
-
-export async function queryDeepL(prompt: string): Promise<AIResponse> {
-  return fetchAIResponse("/api/deepl", prompt, "DeepL");
-}
-
-export async function queryGoogleTranslate(prompt: string): Promise<AIResponse> {
-  return fetchAIResponse("/api/googletranslate", prompt, "Google Translate");
-}
-
-export async function queryOpenAICodex(prompt: string): Promise<AIResponse> {
-  return fetchAIResponse("/api/openai-codex", prompt, "OpenAI Codex");
-}
-
-export async function queryDeepSeekCoder(prompt: string): Promise<AIResponse> {
-  return fetchAIResponse("/api/deepseek-coder", prompt, "DeepSeek Coder");
-}
-
-export async function queryGPT4CodeInterpreter(prompt: string): Promise<AIResponse> {
-  return fetchAIResponse("/api/gpt4-code-interpreter", prompt, "GPT-4 (Code Interpreter)");
-}
-
-export async function queryIBMWatsonx(prompt: string): Promise<AIResponse> {
-  return fetchAIResponse("/api/ibm-watsonx", prompt, "IBM Watsonx");
-}
-
-export async function queryMistral(prompt: string): Promise<AIResponse> {
-  return fetchAIResponse("/api/mistral", prompt, "Mistral");
 }

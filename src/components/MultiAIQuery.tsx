@@ -45,6 +45,14 @@ export default function MultiAIQuery() {
     { id: "mistral", name: "Mistral", queryFn: queryOpenAI }
   ];
 
+  const sortedModels = availableModels.sort((a, b) => {
+    const aSelected = selectedModels.includes(a.id);
+    const bSelected = selectedModels.includes(b.id);
+    if (aSelected && !bSelected) return -1;
+    if (!aSelected && bSelected) return 1;
+    return 0;
+  });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!prompt.trim()) {
@@ -138,8 +146,13 @@ export default function MultiAIQuery() {
           <div className="mb-6 overflow-y-auto max-h-48 pr-2 custom-scrollbar">
             <h2 className="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-300">Select AI Models</h2>
             <div className="space-y-3">
-              {availableModels.map((model) => (
-                <div key={model.id} className="flex items-center space-x-2 hover:bg-purple-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors">
+              {sortedModels.map((model) => (
+                <div 
+                  key={model.id} 
+                  className={`flex items-center space-x-2 hover:bg-purple-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors ${
+                    selectedModels.includes(model.id) ? 'bg-purple-50 dark:bg-gray-800' : ''
+                  }`}
+                >
                   <Checkbox
                     id={model.id}
                     checked={selectedModels.includes(model.id)}
