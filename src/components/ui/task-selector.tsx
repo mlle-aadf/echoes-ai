@@ -1,43 +1,41 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 
 const taskAIPairings: { [key: string]: string[] } = {
-    "Search for Info": ["Perplexity AI", "Bing Chat", "Google Bard"],
-    "Generate Text": ["ChatGPT", "Claude", "Gemini"],
-    "Summarize": ["Claude", "ChatGPT", "Mistral"],
-    "Translate": ["DeepL", "Google Translate", "ChatGPT"],
-    "Generate Code": ["OpenAI Codex", "DeepSeek Coder", "Gemini"],
-    "Analyze Data": ["GPT-4 (Code Interpreter)", "IBM Watsonx"]
+    "Search for Info": ["perplexity", "bingchat", "googlebard"],
+    "Generate Text": ["gpt4", "claude", "gemini"],
+    "Summarize": ["claude", "gpt4", "mistral"],
+    "Translate": ["deepl", "googletranslate", "gpt4"],
+    "Generate Code": ["openai_codex", "deepseek_coder", "gemini"],
+    "Analyze Data": ["gpt4_code_interpreter", "ibm_watsonx"]
 };
 
-const TaskSelector: React.FC = () => {
+interface TaskSelectorProps {
+  onSelectedModelsChange: (models: string[]) => void;
+}
+
+const TaskSelector: React.FC<TaskSelectorProps> = ({ onSelectedModelsChange }) => {
     const [selectedTask, setSelectedTask] = useState<string>('');
-    const [recommendedAIs, setRecommendedAIs] = useState<string[]>([]);
 
     const handleTaskChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const task = event.target.value;
         setSelectedTask(task);
-        setRecommendedAIs(taskAIPairings[task] || []);
+        onSelectedModelsChange(task ? taskAIPairings[task] : []);
     };
 
     return (
-        <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4">Select a Task</h1>
+        <div className="mb-6">
+            <h2 className="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-300">Select a Task</h2>
             <select 
                 value={selectedTask} 
                 onChange={handleTaskChange} 
-                className="border p-2 rounded mb-4"
+                className="w-full border border-purple-200 rounded-md p-2 bg-white/50 dark:bg-gray-900/50 focus-visible:ring-purple-400"
             >
                 <option value="">--Select a Task--</option>
                 {Object.keys(taskAIPairings).map(task => (
                     <option key={task} value={task}>{task}</option>
                 ))}
             </select>
-            <h2 className="text-xl font-semibold mb-2">Recommended AIs</h2>
-            <ul className="list-disc pl-5">
-                {recommendedAIs.map(ai => (
-                    <li key={ai}>{ai}</li>
-                ))}
-            </ul>
         </div>
     );
 };

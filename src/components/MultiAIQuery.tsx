@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
-import { queryAnthropicClaude, queryBingChat, queryDeepL, queryDeepSeekCoder, queryGemini, queryGoogleBard, queryGoogleTranslate, queryGPT4CodeInterpreter, queryIBMWatsonx, queryMistral, queryOpenAI, queryOpenAICodex, queryPerplexity } from "@/lib/ai-clients";
-import { ChevronDown, ChevronUp, Loader, MessageSquare, Sparkles } from "lucide-react";
 import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Checkbox } from "@/components/ui/checkbox";
+import { MessageSquare, Loader, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import { queryOpenAI, queryAnthropicClaude, queryGemini } from "@/lib/ai-clients";
 import TaskSelector from "./ui/task-selector";
 
 interface AIModel {
@@ -33,16 +33,16 @@ export default function MultiAIQuery() {
     { id: "gpt4", name: "GPT-4", queryFn: queryOpenAI },
     { id: "claude", name: "Claude", queryFn: queryAnthropicClaude },
     { id: "gemini", name: "Gemini", queryFn: queryGemini },
-    { id: "perplexity", name: "Perplexity AI", queryFn: queryPerplexity },
-    { id: "bingchat", name: "Bing Chat", queryFn: queryBingChat },
-    { id: "googlebard", name: "Google Bard", queryFn: queryGoogleBard },
-    { id: "deepl", name: "DeepL", queryFn: queryDeepL },
-    { id: "googletranslate", name: "Google Translate", queryFn: queryGoogleTranslate },
-    { id: "openai_codex", name: "OpenAI Codex", queryFn: queryOpenAICodex },
-    { id: "deepseek_coder", name: "DeepSeek Coder", queryFn: queryDeepSeekCoder },
-    { id: "gpt4_code_interpreter", name: "GPT-4 (Code Interpreter)", queryFn: queryGPT4CodeInterpreter },
-    { id: "ibm_watsonx", name: "IBM Watsonx", queryFn: queryIBMWatsonx },
-    { id: "mistral", name: "Mistral", queryFn: queryMistral }
+    { id: "perplexity", name: "Perplexity AI", queryFn: queryOpenAI },
+    { id: "bingchat", name: "Bing Chat", queryFn: queryOpenAI },
+    { id: "googlebard", name: "Google Bard", queryFn: queryOpenAI },
+    { id: "deepl", name: "DeepL", queryFn: queryOpenAI },
+    { id: "googletranslate", name: "Google Translate", queryFn: queryOpenAI },
+    { id: "openai_codex", name: "OpenAI Codex", queryFn: queryOpenAI },
+    { id: "deepseek_coder", name: "DeepSeek Coder", queryFn: queryOpenAI },
+    { id: "gpt4_code_interpreter", name: "GPT-4 (Code Interpreter)", queryFn: queryOpenAI },
+    { id: "ibm_watsonx", name: "IBM Watsonx", queryFn: queryOpenAI },
+    { id: "mistral", name: "Mistral", queryFn: queryOpenAI }
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -91,7 +91,7 @@ export default function MultiAIQuery() {
       });
 
       setResponses(formattedResponses);
-      setExpandedCards(selectedModels); // Expand all cards by default
+      setExpandedCards(selectedModels);
     } catch (error) {
       toast({
         title: "Error",
@@ -119,6 +119,10 @@ export default function MultiAIQuery() {
     );
   };
 
+  const handleSelectedModelsChange = (models: string[]) => {
+    setSelectedModels(models);
+  };
+
   return (
     <div className="flex h-screen overflow-hidden bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
       {/* Left Panel */}
@@ -128,10 +132,10 @@ export default function MultiAIQuery() {
           Multi-AI Query
         </h1>
         
-        <TaskSelector/>
-
         <form onSubmit={handleSubmit} className="flex flex-col h-full">
-          <div className="mb-6">
+          <TaskSelector onSelectedModelsChange={handleSelectedModelsChange} />
+
+          <div className="mb-6 overflow-y-auto max-h-48 pr-2 custom-scrollbar">
             <h2 className="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-300">Select AI Models</h2>
             <div className="space-y-3">
               {availableModels.map((model) => (
@@ -153,12 +157,12 @@ export default function MultiAIQuery() {
             </div>
           </div>
 
-          <div className="flex-grow flex flex-col">
+          <div className="flex-grow flex flex-col min-h-0">
             <Textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Enter your prompt here..."
-              className="flex-grow mb-4 min-h-[200px] resize-none border-purple-200 focus-visible:ring-purple-400 bg-white/50 dark:bg-gray-900/50"
+              className="flex-grow mb-4 resize-none border-purple-200 focus-visible:ring-purple-400 bg-white/50 dark:bg-gray-900/50"
             />
             <Button 
               type="submit" 
