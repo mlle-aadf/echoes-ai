@@ -78,14 +78,91 @@ export async function queryGemini(prompt: string): Promise<AIResponse> {
   try {
     const result = await model.generateContent(prompt);
     const response = result.response;
-    const text = response.text();
+    const responseText = response.text ? response.text() : '';
+    if (typeof responseText !== 'string') {
+      throw new Error("Invalid response from Gemini");
+    }
     
     return {
       model: "Gemini",
-      response: text,
+      response: responseText,
     };
   } catch (error) {
     console.error("Gemini Error:", error);
+    throw error;
+  }
+}
+
+export async function queryPerplexity(prompt: string): Promise<AIResponse> {
+  const apiKey = localStorage.getItem("PERPLEXITY_API_KEY");
+  if (!apiKey) {
+    throw new Error("Perplexity API key not found");
+  }
+
+  try {
+    const response = await fetch('https://api.perplexity.ai/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'llama-3.1-sonar-small-128k-online',
+        messages: [
+          {
+            role: 'system',
+            content: 'Be precise and concise.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        temperature: 0.2,
+      }),
+    });
+
+    if (!response.ok) throw new Error("Failed to query Perplexity");
+    const data = await response.json();
+    
+    return {
+      model: "Perplexity",
+      response: data.choices[0].message.content,
+    };
+  } catch (error) {
+    console.error("Perplexity Error:", error);
+    throw error;
+  }
+}
+
+export async function queryDeepL(prompt: string): Promise<AIResponse> {
+  const apiKey = localStorage.getItem("DEEPL_API_KEY");
+  if (!apiKey) {
+    throw new Error("DeepL API key not found");
+  }
+
+  try {
+    const response = await fetch('https://api-free.deepl.com/v2/translate', {
+      method: 'POST',
+      headers: {
+        'Authorization': `DeepL-Auth-Key ${apiKey}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        text: prompt,
+        target_lang: 'EN',
+      }),
+    });
+
+    if (!response.ok) throw new Error("Failed to query DeepL");
+    const data = await response.json();
+    
+    return {
+      model: "DeepL",
+      response: data.translations[0].text,
+    };
+  } catch (error) {
+    console.error("DeepL Error:", error);
     throw error;
   }
 }

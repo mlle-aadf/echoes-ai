@@ -8,6 +8,7 @@ import { MessageSquare, Loader, ChevronDown, ChevronUp, Sparkles } from "lucide-
 import { useToast } from "@/components/ui/use-toast";
 import { queryOpenAI, queryAnthropicClaude, queryGemini } from "@/lib/ai-clients";
 import TaskSelector from "./ui/task-selector";
+import APIKeySetup from "./APIKeySetup";
 
 interface AIModel {
   id: string;
@@ -135,10 +136,13 @@ export default function MultiAIQuery() {
     <div className="flex h-screen overflow-hidden bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
       {/* Left Panel */}
       <div className="w-80 border-r bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-6 flex flex-col shadow-lg">
-        <h1 className="text-2xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent flex items-center gap-2">
-          <Sparkles className="h-6 w-6 text-purple-600" />
-          Multi-AI Query
-        </h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent flex items-center gap-2">
+            <Sparkles className="h-6 w-6 text-purple-600" />
+            Multi-AI Query
+          </h1>
+          <APIKeySetup />
+        </div>
         
         <form onSubmit={handleSubmit} className="flex flex-col h-full">
           <TaskSelector onSelectedModelsChange={handleSelectedModelsChange} />
