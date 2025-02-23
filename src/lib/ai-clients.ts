@@ -8,7 +8,9 @@ export interface AIResponse {
   error?: string;
 }
 
-export async function queryOpenAI(prompt: string): Promise<AIResponse> {
+const MAX_TOKENS = 100; // Limit token output for cost control
+
+export async function queryOpenAI(prompt: string, requireAdvanced = false): Promise<AIResponse> {
   if (!localStorage.getItem("OPENAI_API_KEY")) {
     throw new Error("OpenAI API key not found");
   }
@@ -21,8 +23,9 @@ export async function queryOpenAI(prompt: string): Promise<AIResponse> {
         "Authorization": `Bearer ${localStorage.getItem("OPENAI_API_KEY")}`,
       },
       body: JSON.stringify({
-        model: "gpt-4-turbo-preview",
+        model: requireAdvanced ? "gpt-4-turbo-preview" : "gpt-3.5-turbo",
         messages: [{ role: "user", content: prompt }],
+        max_tokens: MAX_TOKENS,
       }),
     });
 
@@ -30,7 +33,7 @@ export async function queryOpenAI(prompt: string): Promise<AIResponse> {
     const data = await response.json();
     
     return {
-      model: "GPT-4",
+      model: requireAdvanced ? "GPT-4" : "GPT-3.5",
       response: data.choices[0].message.content,
     };
   } catch (error) {
@@ -52,7 +55,7 @@ export async function queryAnthropicClaude(prompt: string): Promise<AIResponse> 
   try {
     const message = await anthropic.messages.create({
       model: "claude-3-opus-20240229",
-      max_tokens: 1024,
+      max_tokens: MAX_TOKENS,
       messages: [{ role: "user", content: prompt }],
     });
 
@@ -66,26 +69,24 @@ export async function queryAnthropicClaude(prompt: string): Promise<AIResponse> 
   }
 }
 
-export async function queryGemini(prompt: string): Promise<AIResponse> {
+export async function queryGemini(prompt: string, requireAdvanced = false): Promise<AIResponse> {
   const apiKey = localStorage.getItem("GEMINI_API_KEY");
   if (!apiKey) {
     throw new Error("Gemini API key not found");
   }
 
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+  const modelName = requireAdvanced ? "gemini-pro" : "gemini-1.0-pro";
+  const model = genAI.getGenerativeModel({ model: modelName });
 
   try {
     const result = await model.generateContent(prompt);
     const response = result.response;
-    const responseText = response.text ? response.text() : '';
-    if (typeof responseText !== 'string') {
-      throw new Error("Invalid response from Gemini");
-    }
+    const text = await response.text();
     
     return {
-      model: "Gemini",
-      response: responseText,
+      model: requireAdvanced ? "Gemini Advanced" : "Gemini",
+      response: text,
     };
   } catch (error) {
     console.error("Gemini Error:", error);
@@ -107,7 +108,7 @@ export async function queryPerplexity(prompt: string): Promise<AIResponse> {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'llama-3.1-sonar-small-128k-online',
+        model: 'llama-3.1-sonar-small-128k-online', // Using the smaller model for cost efficiency
         messages: [
           {
             role: 'system',
@@ -119,6 +120,7 @@ export async function queryPerplexity(prompt: string): Promise<AIResponse> {
           }
         ],
         temperature: 0.2,
+        max_tokens: MAX_TOKENS,
       }),
     });
 
@@ -165,4 +167,22 @@ export async function queryDeepL(prompt: string): Promise<AIResponse> {
     console.error("DeepL Error:", error);
     throw error;
   }
+}
+
+// Simple in-memory cache for responses
+const responseCache = new Map<string, AIResponse>();
+
+export async function queryCachedAI(
+  prompt: string, 
+  queryFn: (prompt: string) => Promise<AIResponse>
+): Promise<AIResponse> {
+  const cacheKey = `${queryFn.name}-${prompt}`;
+  
+  if (responseCache.has(cacheKey)) {
+    return responseCache.get(cacheKey)!;
+  }
+
+  const response = await queryFn(prompt);
+  responseCache.set(cacheKey, response);
+  return response;
 }

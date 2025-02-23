@@ -1,13 +1,13 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 const taskAIPairings: { [key: string]: string[] } = {
-    "Search for Info": ["perplexity", "bingchat", "googlebard"],
-    "Generate Text": ["gpt4", "claude", "gemini"],
-    "Summarize": ["claude", "gpt4", "mistral"],
-    "Translate": ["deepl", "googletranslate", "gpt4"],
-    "Generate Code": ["openai_codex", "deepseek_coder", "gemini"],
-    "Analyze Data": ["gpt4_code_interpreter", "ibm_watsonx"]
+    "Search for Info": ["perplexity", "bingchat", "googlebard"], // Free tier priority
+    "Generate Text": ["gpt3.5", "gemini", "claude"], // Cost-effective mix
+    "Summarize": ["perplexity", "claude", "gpt3.5"], // Perplexity first for free tier
+    "Translate": ["deepl", "googletranslate", "gpt3.5"], // Translation-specific
+    "Generate Code": ["mistral", "deepseek_coder", "gpt4"], // Code-specific, cost-effective
+    "Analyze Data": ["gemini", "gpt3.5", "claude"] // Balanced approach
 };
 
 interface TaskSelectorProps {
