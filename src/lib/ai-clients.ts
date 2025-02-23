@@ -1,4 +1,3 @@
-
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Anthropic from "@anthropic-ai/sdk";
 
@@ -8,7 +7,30 @@ export interface AIResponse {
   error?: string;
 }
 
+declare global {
+  interface Window {
+    puter: {
+      ai: {
+        chat: (prompt: string) => Promise<string>;
+      };
+    };
+  }
+}
+
 const MAX_TOKENS = 100; // Limit token output for cost control
+
+export async function queryPuter(prompt: string): Promise<AIResponse> {
+  try {
+    const response = await window.puter.ai.chat(prompt);
+    return {
+      model: "Puter GPT-4o mini",
+      response: response,
+    };
+  } catch (error) {
+    console.error("Puter Error:", error);
+    throw error;
+  }
+}
 
 export async function queryOpenAI(prompt: string, requireAdvanced = false): Promise<AIResponse> {
   if (!localStorage.getItem("OPENAI_API_KEY")) {
@@ -82,11 +104,19 @@ export async function queryGemini(prompt: string, requireAdvanced = false): Prom
   try {
     const result = await model.generateContent(prompt);
     const response = result.response;
-    const text = await response.text();
+    let responseText = '';
+    
+    if (response.text && typeof response.text === 'function') {
+      responseText = response.text();
+    } else if (response.candidates && response.candidates[0].content.parts[0].text) {
+      responseText = response.candidates[0].content.parts[0].text;
+    } else {
+      throw new Error("Unexpected response format from Gemini");
+    }
     
     return {
       model: requireAdvanced ? "Gemini Advanced" : "Gemini",
-      response: text,
+      response: responseText,
     };
   } catch (error) {
     console.error("Gemini Error:", error);

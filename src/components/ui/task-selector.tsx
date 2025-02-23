@@ -1,12 +1,13 @@
+
 import React, { useState } from 'react';
 
 const taskAIPairings: { [key: string]: string[] } = {
-    "Search for Info": ["perplexity", "bingchat", "googlebard"], // Free tier priority
-    "Generate Text": ["gpt3.5", "gemini", "claude"], // Cost-effective mix
-    "Summarize": ["perplexity", "claude", "gpt3.5"], // Perplexity first for free tier
+    "Search for Info": ["puter", "perplexity", "bingchat"], // Free tier priority
+    "Generate Text": ["puter", "gpt3.5", "gemini"], // Cost-effective mix
+    "Summarize": ["puter", "perplexity", "claude"], // Free/cheap priority
     "Translate": ["deepl", "googletranslate", "gpt3.5"], // Translation-specific
-    "Generate Code": ["mistral", "deepseek_coder", "gpt4"], // Code-specific, cost-effective
-    "Analyze Data": ["gemini", "gpt3.5", "claude"] // Balanced approach
+    "Generate Code": ["puter", "mistral", "deepseek_coder"], // Code-specific, cost-effective
+    "Analyze Data": ["puter", "gemini", "gpt3.5"] // Balanced approach
 };
 
 interface TaskSelectorProps {
