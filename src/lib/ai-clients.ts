@@ -1,4 +1,3 @@
-
 export interface AIResponse {
   model: string;
   response: string;
@@ -25,11 +24,19 @@ export async function queryOpenAI(prompt: string): Promise<AIResponse> {
   try {
     ensurePuter();
     const response = await window.puter.ai.chat(prompt, {
-      model: 'gpt-4'
+      model: 'gpt-4o' 
     });
+
+    console.log("OpenAI Response:", response);
+
+    const content = response.message?.content;
+    if (!content) {
+      throw new Error("Invalid response structure");
+    }
+
     return {
-      model: "GPT-4",
-      response: response.message.content[0].text,
+      model: "GPT-4o",
+      response: content,
     };
   } catch (error) {
     console.error("OpenAI Error:", error);
@@ -43,9 +50,17 @@ export async function queryGemini(prompt: string): Promise<AIResponse> {
     const response = await window.puter.ai.chat(prompt, {
       model: 'gemini-2.0-flash'
     });
+
+    console.log("Gemini Response:", response);
+
+    const content = response.message?.content;
+    if (!content) {
+      throw new Error("Invalid response structure");
+    }
+
     return {
       model: "Gemini",
-      response: response.message.content[0].text,
+      response: content,
     };
   } catch (error) {
     console.error("Gemini Error:", error);
@@ -57,11 +72,19 @@ export async function queryClaude(prompt: string): Promise<AIResponse> {
   try {
     ensurePuter();
     const response = await window.puter.ai.chat(prompt, {
-      model: 'claude-3-5-sonnet'
+      model: 'claude-3-5-sonnet' 
     });
+
+    console.log("Claude Response:", response);
+
+    const content = response.message?.content[0].text;
+    if (!content) {
+      throw new Error("Invalid response structure");
+    }
+
     return {
       model: "Claude",
-      response: response.message.content[0].text,
+      response: content,
     };
   } catch (error) {
     console.error("Claude Error:", error);
@@ -73,11 +96,19 @@ export async function queryDeepseek(prompt: string): Promise<AIResponse> {
   try {
     ensurePuter();
     const response = await window.puter.ai.chat(prompt, {
-      model: 'deepseek-chat'
+      model: 'deepseek-chat' 
     });
+
+    console.log("Deepseek Response:", response);
+
+    const content = response.message?.content;
+    if (!content) {
+      throw new Error("Invalid response structure");
+    }
+
     return {
       model: "Deepseek",
-      response: response.message.content[0].text,
+      response: content,
     };
   } catch (error) {
     console.error("Deepseek Error:", error);
@@ -89,12 +120,19 @@ export async function queryGrok(prompt: string): Promise<AIResponse> {
   try {
     ensurePuter();
     const response = await window.puter.ai.chat(prompt, {
-      model: 'grok-beta',
-      stream: true
+      model: 'grok-beta' 
     });
+
+    console.log("Grok Response:", response);
+
+    const content = response.message?.content;
+    if (!content) {
+      throw new Error("Invalid response structure");
+    }
+
     return {
       model: "Grok",
-      response: response.message.content[0].text,
+      response: content,
     };
   } catch (error) {
     console.error("Grok Error:", error);

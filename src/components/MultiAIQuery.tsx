@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { MessageSquare, Loader, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { queryOpenAI, queryGemini, queryClaude, queryDeepseek, queryGrok } from "@/lib/ai-clients";
-import TaskSelector from "./ui/task-selector";
 import { usePuter } from "@/hooks/usePuter";
+import { queryClaude, queryDeepseek, queryGemini, queryGrok, queryOpenAI } from "@/lib/ai-clients";
+import { ChevronDown, ChevronUp, Loader, MessageSquare, Sparkles } from "lucide-react";
+import { useState } from "react";
+import TaskSelector from "./ui/task-selector";
 
 interface AIModel {
   id: string;
@@ -96,11 +96,13 @@ export default function MultiAIQuery() {
 
       const results = await Promise.allSettled(selectedModelQueries);
 
+      
       const formattedResponses = results.map((result, index) => {
         const modelId = selectedModels[index];
         const modelName = availableModels.find(m => m.id === modelId)?.name || "Unknown";
         
         if (result.status === "fulfilled") {
+          console.log("RESULTS: ", result.value);
           return result.value;
         } else {
           return {
