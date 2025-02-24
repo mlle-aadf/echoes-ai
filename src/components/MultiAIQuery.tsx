@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Checkbox } from "@/components/ui/checkbox";
 import { MessageSquare, Loader, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import { queryOpenAI, queryAnthropicClaude, queryGemini } from "@/lib/ai-clients";
+import { queryOpenAI } from "@/lib/ai-clients";
 import TaskSelector from "./ui/task-selector";
 
 interface AIModel {
@@ -26,23 +26,11 @@ export default function MultiAIQuery() {
   const [isLoading, setIsLoading] = useState(false);
   const [responses, setResponses] = useState<AIResponse[]>([]);
   const [expandedCards, setExpandedCards] = useState<string[]>([]);
-  const [selectedModels, setSelectedModels] = useState<string[]>(["gpt4", "claude", "gemini"]);
+  const [selectedModels, setSelectedModels] = useState<string[]>(["gpt4"]);
   const { toast } = useToast();
 
   const availableModels: AIModel[] = [
     { id: "gpt4", name: "GPT-4", queryFn: queryOpenAI },
-    { id: "claude", name: "Claude", queryFn: queryAnthropicClaude },
-    { id: "gemini", name: "Gemini", queryFn: queryGemini },
-    { id: "perplexity", name: "Perplexity AI", queryFn: queryOpenAI },
-    { id: "bingchat", name: "Bing Chat", queryFn: queryOpenAI },
-    { id: "googlebard", name: "Google Bard", queryFn: queryOpenAI },
-    { id: "deepl", name: "DeepL", queryFn: queryOpenAI },
-    { id: "googletranslate", name: "Google Translate", queryFn: queryOpenAI },
-    { id: "openai_codex", name: "OpenAI Codex", queryFn: queryOpenAI },
-    { id: "deepseek_coder", name: "DeepSeek Coder", queryFn: queryOpenAI },
-    { id: "gpt4_code_interpreter", name: "GPT-4 (Code Interpreter)", queryFn: queryOpenAI },
-    { id: "ibm_watsonx", name: "IBM Watsonx", queryFn: queryOpenAI },
-    { id: "mistral", name: "Mistral", queryFn: queryOpenAI }
   ];
 
   const sortedModels = availableModels.sort((a, b) => {
