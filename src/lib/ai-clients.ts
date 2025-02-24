@@ -9,14 +9,21 @@ declare global {
   interface Window {
     puter: {
       ai: {
-        chat: (prompt: string, options?: { model?: string }) => Promise<any>;
+        chat: (prompt: string, options?: { model?: string; stream?: boolean }) => Promise<any>;
       };
     };
   }
 }
 
+const ensurePuter = () => {
+  if (!window.puter) {
+    throw new Error('Puter is not initialized');
+  }
+};
+
 export async function queryOpenAI(prompt: string): Promise<AIResponse> {
   try {
+    ensurePuter();
     const response = await window.puter.ai.chat(prompt, {
       model: 'gpt-4'
     });
@@ -32,6 +39,7 @@ export async function queryOpenAI(prompt: string): Promise<AIResponse> {
 
 export async function queryGemini(prompt: string): Promise<AIResponse> {
   try {
+    ensurePuter();
     const response = await window.puter.ai.chat(prompt, {
       model: 'gemini-2.0-flash'
     });
@@ -47,6 +55,7 @@ export async function queryGemini(prompt: string): Promise<AIResponse> {
 
 export async function queryClaude(prompt: string): Promise<AIResponse> {
   try {
+    ensurePuter();
     const response = await window.puter.ai.chat(prompt, {
       model: 'claude-3-5-sonnet'
     });
@@ -62,6 +71,7 @@ export async function queryClaude(prompt: string): Promise<AIResponse> {
 
 export async function queryDeepseek(prompt: string): Promise<AIResponse> {
   try {
+    ensurePuter();
     const response = await window.puter.ai.chat(prompt, {
       model: 'deepseek-chat'
     });
@@ -71,6 +81,23 @@ export async function queryDeepseek(prompt: string): Promise<AIResponse> {
     };
   } catch (error) {
     console.error("Deepseek Error:", error);
+    throw error;
+  }
+}
+
+export async function queryGrok(prompt: string): Promise<AIResponse> {
+  try {
+    ensurePuter();
+    const response = await window.puter.ai.chat(prompt, {
+      model: 'grok-beta',
+      stream: true
+    });
+    return {
+      model: "Grok",
+      response: response.message.content[0].text,
+    };
+  } catch (error) {
+    console.error("Grok Error:", error);
     throw error;
   }
 }
