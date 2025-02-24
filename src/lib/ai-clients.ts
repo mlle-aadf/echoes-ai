@@ -63,7 +63,7 @@ export async function queryClaude(prompt: string): Promise<AIResponse> {
 export async function queryDeepseek(prompt: string): Promise<AIResponse> {
   try {
     const response = await window.puter.ai.chat(prompt, {
-      model: 'deepseek-coder'
+      model: 'deepseek-chat'
     });
     return {
       model: "Deepseek",
