@@ -8,7 +8,6 @@ import { usePuter } from "@/hooks/usePuter";
 import { queryClaude, queryDeepseek, queryGemini, queryGrok, queryOpenAI } from "@/lib/ai-clients";
 import { ChevronDown, ChevronUp, Loader, MessageSquare, Sparkles } from "lucide-react";
 import { useState } from "react";
-import TaskSelector from "./ui/task-selector";
 
 interface AIModel {
   id: string;
@@ -37,6 +36,10 @@ export default function MultiAIQuery() {
     { id: "claude", name: "Claude", queryFn: queryClaude },
     { id: "deepseek", name: "Deepseek", queryFn: queryDeepseek },
     { id: "grok", name: "Grok", queryFn: queryGrok },
+    // { id: "llama", name: "Meta Llama", queryFn: queryLlama },
+    // { id: "mistral", name: "Mistral", queryFn: queryMistral },
+    // { id: "codestral", name: "Codestral", queryFn: queryCodestral },
+    // { id: "gemma", name: "Gemma", queryFn: queryGemma }
   ];
 
   const sortedModels = availableModels.sort((a, b) => {
@@ -157,9 +160,9 @@ export default function MultiAIQuery() {
         </div>
         
         <form onSubmit={handleSubmit} className="flex flex-col h-full">
-          <TaskSelector onSelectedModelsChange={handleSelectedModelsChange} />
+          {/* <TaskSelector onSelectedModelsChange={handleSelectedModelsChange} /> */}
 
-          <div className="mb-6 overflow-y-auto max-h-48 pr-2 custom-scrollbar">
+          <div className="mb-6 overflow-y-auto max-h-50 pr-2 custom-scrollbar">
             <h2 className="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-300">Select AI Models</h2>
             <div className="space-y-3">
               {sortedModels.map((model) => (
@@ -272,3 +275,7 @@ export default function MultiAIQuery() {
     </div>
   );
 }
+function queryLLama(prompt: string): Promise<AIResponse> {
+  throw new Error("Function not implemented.");
+}
+

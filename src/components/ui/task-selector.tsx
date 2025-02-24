@@ -1,12 +1,15 @@
-
 import React, { useState } from 'react';
 
 const taskAIPairings: { [key: string]: string[] } = {
-    "Search for Info": ["gpt4", "gemini", "claude", "grok"],
-    "Generate Text": ["gpt4", "claude", "gemini", "grok"],
-    "Summarize": ["claude", "gpt4", "gemini", "grok"],
-    "Generate Code": ["deepseek", "gpt4", "claude", "grok"],
-    "Analyze Data": ["gemini", "gpt4", "claude", "grok"]
+    "Search for Information": ["gpt-4o-mini", "gemini-2.0-flash", "grok-beta"],
+    "Generate Text": ["gpt-4o", "claude-3-5-sonnet", "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"],
+    "Summarize Content": ["claude-3-5-sonnet", "gpt-4o-mini", "mistral-large-latest"],
+    "Translate Text": ["gpt-4o-mini", "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo", "google/gemma-2-27b-it"],
+    "Generate Code": ["codestral-latest", "gpt-4o", "deepseek-chat"],
+    "Analyze Data": ["gpt-4o-mini", "deepseek-reasoner", "gemini-1.5-flash"],
+    "Automate Workflows": ["gpt-4o", "grok-beta", "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo"],
+    "Make Predictions": ["gpt-4o-mini", "deepseek-reasoner", "gemini-1.5-flash"],
+    "Text-to-Speech": ["claude-3-5-sonnet", "gpt-4o-mini", "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"]
 };
 
 interface TaskSelectorProps {

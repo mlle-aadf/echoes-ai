@@ -24,7 +24,7 @@ export async function queryOpenAI(prompt: string): Promise<AIResponse> {
   try {
     ensurePuter();
     const response = await window.puter.ai.chat(prompt, {
-      model: 'gpt-4o' 
+      model: 'gpt-4o-mini' ,
     });
 
     console.log("OpenAI Response:", response);
@@ -35,7 +35,7 @@ export async function queryOpenAI(prompt: string): Promise<AIResponse> {
     }
 
     return {
-      model: "GPT-4o",
+      model: "GPT-4o Mini",
       response: content,
     };
   } catch (error) {
@@ -140,6 +140,33 @@ export async function queryGrok(prompt: string): Promise<AIResponse> {
   }
 }
 
+export async function queryLlama(prompt: string): Promise<AIResponse> {
+  try {
+    ensurePuter();
+    const response = await window.puter.ai.chat(prompt, {
+      model: 'meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo' 
+    });
+
+    console.log("Llama Response:", response);
+
+    const content = response.message?.content;
+    if (!content) {
+      throw new Error("Invalid response structure");
+    }
+
+    return {
+      model: "Llama",
+      response: content,
+    };
+  } catch (error) {
+    console.error("Llama Error:", error);
+    throw error;
+  }
+}
+
+
+
+
 // Simple in-memory cache for responses
 const responseCache = new Map<string, AIResponse>();
 
@@ -157,3 +184,6 @@ export async function queryCachedAI(
   responseCache.set(cacheKey, response);
   return response;
 }
+
+
+// https://docs.puter.com/prompt.md
