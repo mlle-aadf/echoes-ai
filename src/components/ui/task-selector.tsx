@@ -2,11 +2,11 @@
 import React, { useState } from 'react';
 
 const taskAIPairings: { [key: string]: string[] } = {
-    "Search for Info": ["gpt4"],
-    "Generate Text": ["gpt4"],
-    "Summarize": ["gpt4"],
-    "Generate Code": ["gpt4"],
-    "Analyze Data": ["gpt4"]
+    "Search for Info": ["gpt4", "gemini", "claude"],
+    "Generate Text": ["gpt4", "claude", "gemini"],
+    "Summarize": ["claude", "gpt4", "gemini"],
+    "Generate Code": ["deepseek", "gpt4", "claude"],
+    "Analyze Data": ["gemini", "gpt4", "claude"]
 };
 
 interface TaskSelectorProps {
