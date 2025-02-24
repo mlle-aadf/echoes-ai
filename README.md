@@ -41,3 +41,5 @@ Pull requests are welcome! Open an issue for feature requests or bug reports.
 
 ## 🛡️ License
 MIT License. See `LICENSE` for details.
+
+![image](https://github.com/user-attachments/assets/c8b21185-6b4d-4d58-bd6c-2be5323fbb65)
