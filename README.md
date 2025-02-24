@@ -1,4 +1,4 @@
-# 🚀 Multi-AI Query Tool
+# 🚀 Multi-AI Query Tool (WIP)
 
 A web app that allows users to send the same prompt to multiple AI models simultaneously and compare responses.
 
@@ -32,11 +32,9 @@ npm install
    ```
 2. Open `http://localhost:3000` in your browser.
 
-## 📌 Roadmap
+## 📌 Upcoming Features
 - [ ] Implement Task-Based AI Suggestions
 - [ ] Add more AI models (e.g., Perplexity, Mistral)
-- [ ] Enhance UI with response filtering & highlighting
-- [ ] Save and export query results
 
 ## 🤝 Contributing
 Pull requests are welcome! Open an issue for feature requests or bug reports.
