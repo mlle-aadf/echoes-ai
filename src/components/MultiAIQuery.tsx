@@ -8,7 +8,6 @@ import { MessageSquare, Loader, ChevronDown, ChevronUp, Sparkles } from "lucide-
 import { useToast } from "@/components/ui/use-toast";
 import { queryOpenAI, queryAnthropicClaude, queryGemini } from "@/lib/ai-clients";
 import TaskSelector from "./ui/task-selector";
-import APIKeySetup from "./APIKeySetup";
 
 interface AIModel {
   id: string;
@@ -141,7 +140,6 @@ export default function MultiAIQuery() {
             <Sparkles className="h-6 w-6 text-purple-600" />
             Multi-AI Query
           </h1>
-          <APIKeySetup />
         </div>
         
         <form onSubmit={handleSubmit} className="flex flex-col h-full">
