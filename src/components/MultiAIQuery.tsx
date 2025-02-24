@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Checkbox } from "@/components/ui/checkbox";
 import { MessageSquare, Loader, ChevronDown, ChevronUp, Sparkles } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import { queryOpenAI, queryGemini, queryClaude, queryDeepseek } from "@/lib/ai-clients";
+import { queryOpenAI, queryGemini, queryClaude, queryDeepseek, queryGrok } from "@/lib/ai-clients";
 import TaskSelector from "./ui/task-selector";
 
 interface AIModel {
@@ -34,6 +34,7 @@ export default function MultiAIQuery() {
     { id: "gemini", name: "Gemini", queryFn: queryGemini },
     { id: "claude", name: "Claude", queryFn: queryClaude },
     { id: "deepseek", name: "Deepseek", queryFn: queryDeepseek },
+    { id: "grok", name: "Grok", queryFn: queryGrok },
   ];
 
   const sortedModels = availableModels.sort((a, b) => {

@@ -9,7 +9,7 @@ declare global {
   interface Window {
     puter: {
       ai: {
-        chat: (prompt: string, options?: { model?: string }) => Promise<any>;
+        chat: (prompt: string, options?: { model?: string, stream?: boolean }) => Promise<any>;
       };
     };
   }
@@ -71,6 +71,22 @@ export async function queryDeepseek(prompt: string): Promise<AIResponse> {
     };
   } catch (error) {
     console.error("Deepseek Error:", error);
+    throw error;
+  }
+}
+
+export async function queryGrok(prompt: string): Promise<AIResponse> {
+  try {
+    const response = await window.puter.ai.chat(prompt, {
+      model: 'grok-beta',
+      stream: true
+    });
+    return {
+      model: "Grok",
+      response: response.message.content[0].text,
+    };
+  } catch (error) {
+    console.error("Grok Error:", error);
     throw error;
   }
 }
