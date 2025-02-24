@@ -8,6 +8,7 @@ import { MessageSquare, Loader, ChevronDown, ChevronUp, Sparkles } from "lucide-
 import { useToast } from "@/components/ui/use-toast";
 import { queryOpenAI, queryGemini, queryClaude, queryDeepseek, queryGrok } from "@/lib/ai-clients";
 import TaskSelector from "./ui/task-selector";
+import { usePuter } from "@/hooks/usePuter";
 
 interface AIModel {
   id: string;
@@ -28,6 +29,7 @@ export default function MultiAIQuery() {
   const [expandedCards, setExpandedCards] = useState<string[]>([]);
   const [selectedModels, setSelectedModels] = useState<string[]>(["gpt4"]);
   const { toast } = useToast();
+  const { isPuterReady, error: puterError } = usePuter();
 
   const availableModels: AIModel[] = [
     { id: "gpt4", name: "GPT-4", queryFn: queryOpenAI },
@@ -47,6 +49,25 @@ export default function MultiAIQuery() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!isPuterReady) {
+      toast({
+        title: "Error",
+        description: "Puter API is not ready yet. Please wait...",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (puterError) {
+      toast({
+        title: "Error",
+        description: "Failed to initialize Puter API. Please refresh the page.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!prompt.trim()) {
       toast({
         title: "Error",
@@ -125,7 +146,6 @@ export default function MultiAIQuery() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
-      {/* Left Panel */}
       <div className="w-80 border-r bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm p-6 flex flex-col shadow-lg">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent flex items-center gap-2">
@@ -192,7 +212,6 @@ export default function MultiAIQuery() {
         </form>
       </div>
 
-      {/* Main Content Area */}
       <div className="flex-1 overflow-y-auto p-6">
         <div 
           className="grid gap-6" 
