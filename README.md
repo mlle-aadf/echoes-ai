@@ -10,11 +10,11 @@ A web app that allows users to send the same prompt to multiple AI models simult
 ## 🔧 Tech Stack
 - **Frontend**: React, TailwindCSS
 - **Backend**: Node.js, Express
-- **AI Integration**: Uses Puter.js for model interactions
+- **AI Integration**: Uses Puter.js for model interactions (requires sign-up to use)
 
 ## 🤖 Built With AI  
 This project was developed with the help of AI-powered tools:  
-- **ChatGPT** – Assisted in outlining the project and providing prompts  
+- **ChatGPT** – Assisted in outlining the project, providing prompts, and generating documentation  
 - **Lovable** – Streamlined front-end component generation and UI structuring  
 - **GitHub Copilot** – Facilitated code integration, debugging, and cross-file implementations  
 
@@ -31,6 +31,7 @@ npm install
    npm run dev
    ```
 2. Open `http://localhost:3000` in your browser.
+3. Ensure you have signed up for the Puter API and configured your API key.
 
 ## 📌 Upcoming Features
 - [ ] Implement Task-Based AI Suggestions
