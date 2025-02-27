@@ -2,11 +2,7 @@
 import MultiAIQuery from "@/components/MultiAIQuery";
 
 const Index = () => {
-  return (
-    <div className="flex min-h-screen w-full">
-      <MultiAIQuery />
-    </div>
-  );
+  return <MultiAIQuery />;
 };
 
 export default Index;
