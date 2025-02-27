@@ -3,7 +3,7 @@ import MultiAIQuery from "@/components/MultiAIQuery";
 
 const Index = () => {
   return (
-    <div className="min-h-screen">
+    <div className="flex min-h-screen w-full">
       <MultiAIQuery />
     </div>
   );
