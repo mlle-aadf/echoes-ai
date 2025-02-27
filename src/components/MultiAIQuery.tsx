@@ -8,6 +8,7 @@ import { usePuter } from "@/hooks/usePuter";
 import { queryClaude, queryDeepseek, queryGemini, queryGrok, queryOpenAI } from "@/lib/ai-clients";
 import { ChevronDown, ChevronUp, Loader, MessageSquare, Sparkles } from "lucide-react";
 import { useState } from "react";
+import Settings from "./Settings";
 
 interface AIModel {
   id: string;
@@ -27,6 +28,7 @@ export default function MultiAIQuery() {
   const [responses, setResponses] = useState<AIResponse[]>([]);
   const [expandedCards, setExpandedCards] = useState<string[]>([]);
   const [selectedModels, setSelectedModels] = useState<string[]>(["gpt4"]);
+  const [layout, setLayout] = useState<"vertical" | "horizontal">("vertical");
   const { toast } = useToast();
   const { isPuterReady, error: puterError } = usePuter();
 
@@ -157,11 +159,10 @@ export default function MultiAIQuery() {
             <Sparkles className="h-6 w-6 text-purple-600" />
             Multi-AI Query
           </h1>
+          <Settings onLayoutChange={setLayout} />
         </div>
         
         <form onSubmit={handleSubmit} className="flex flex-col h-full">
-          {/* <TaskSelector onSelectedModelsChange={handleSelectedModelsChange} /> */}
-
           <div className="mb-6 overflow-y-auto max-h-50 pr-2 custom-scrollbar">
             <h2 className="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-300">Select AI Models</h2>
             <div className="space-y-3">
@@ -219,10 +220,11 @@ export default function MultiAIQuery() {
 
       <div className="flex-1 overflow-y-auto p-6">
         <div 
-          className="grid gap-6" 
-          style={{
-            gridTemplateColumns: `repeat(${Math.max(1, selectedModels.length)}, minmax(0, 1fr))`
-          }}
+          className={`grid gap-6 ${
+            layout === "vertical" 
+              ? `grid-cols-1 ${selectedModels.length > 0 ? "md:grid-cols-2 lg:grid-cols-3" : ""}`
+              : `grid-cols-${Math.max(1, selectedModels.length)}`
+          }`}
         >
           {isLoading ? (
             selectedModels.map((modelId) => (
@@ -275,7 +277,7 @@ export default function MultiAIQuery() {
     </div>
   );
 }
+
 function queryLLama(prompt: string): Promise<AIResponse> {
   throw new Error("Function not implemented.");
 }
-
