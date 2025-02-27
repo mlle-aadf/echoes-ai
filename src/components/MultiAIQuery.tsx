@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -9,7 +8,7 @@ import { usePuter } from "@/hooks/usePuter";
 import Settings from "./Settings";
 import ModelSelector from "./multi-ai-query/ModelSelector";
 import ResponseGrid from "./multi-ai-query/ResponseGrid";
-import { AIModel } from "@/types/ai";
+import { AIModel, AIResponse } from "@/types/ai";
 
 export default function MultiAIQuery() {
   const [prompt, setPrompt] = useState("");

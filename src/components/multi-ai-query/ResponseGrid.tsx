@@ -1,4 +1,5 @@
 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import ResponseCard from "./ResponseCard";
 import { AIResponse } from "@/types/ai";
