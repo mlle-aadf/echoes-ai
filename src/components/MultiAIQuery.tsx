@@ -6,11 +6,13 @@ import { useToast } from "@/components/ui/use-toast";
 import { usePuter } from "@/hooks/usePuter";
 import { queryClaude, queryDeepseek, queryGemini, queryGrok, queryOpenAI } from "@/lib/ai-clients";
 import { Loader, MessageSquare, Sparkles } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ModelSelector from "./ModelSelector";
 import ResponseCard from "./ResponseCard";
 import ViewControls from "./ViewControls";
+import SettingsDropdown from "./SettingsDropdown";
 import { AIModel, AIResponse, ViewLayout } from "@/lib/types";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 export default function MultiAIQuery() {
   const [prompt, setPrompt] = useState("");
@@ -18,7 +20,7 @@ export default function MultiAIQuery() {
   const [responses, setResponses] = useState<AIResponse[]>([]);
   const [expandedCards, setExpandedCards] = useState<string[]>([]);
   const [maximizedCard, setMaximizedCard] = useState<string | null>(null);
-  const [selectedModels, setSelectedModels] = useState<string[]>(["gpt4"]);
+  const [selectedModels, setSelectedModels] = useLocalStorage<string[]>("selectedModels", ["gpt4"]);
   const [viewLayout, setViewLayout] = useState<ViewLayout>("columns");
   const { toast } = useToast();
   const { isPuterReady, error: puterError } = usePuter();
@@ -160,6 +162,7 @@ export default function MultiAIQuery() {
             <Sparkles className="h-6 w-6 text-purple-600" />
             Multi-AI Query
           </h1>
+          <SettingsDropdown viewLayout={viewLayout} setViewLayout={setViewLayout} />
         </div>
         
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 flex-1">
