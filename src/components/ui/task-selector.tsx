@@ -7,9 +7,9 @@ const taskAIPairings: { [key: string]: string[] } = {
     "Translate Text": ["gpt-4o-mini", "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo", "google/gemma-2-27b-it"],
     "Generate Code": ["codestral-latest", "gpt-4o", "deepseek-chat"],
     "Analyze Data": ["gpt-4o-mini", "deepseek-reasoner", "gemini-1.5-flash"],
-    "Automate Workflows": ["gpt-4o", "grok-beta", "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo"],
+    // "Automate Workflows": ["gpt-4o", "grok-beta", "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo"],
     "Make Predictions": ["gpt-4o-mini", "deepseek-reasoner", "gemini-1.5-flash"],
-    "Text-to-Speech": ["claude-3-5-sonnet", "gpt-4o-mini", "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"]
+    // "Text-to-Speech": ["claude-3-5-sonnet", "gpt-4o-mini", "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"]
 };
 
 interface TaskSelectorProps {
