@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
@@ -7,7 +6,7 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { usePuter } from "@/hooks/usePuter";
 import { queryClaude, queryDeepseek, queryGemini, queryGrok, queryLlama, queryOpenAI } from "@/lib/ai-clients";
 import { AIModel, AIResponse, ViewLayout } from "@/lib/types";
-import { Joystick, Loader, MessageSquare, Sparkles, StopCircle } from "lucide-react";
+import { Loader, MessageSquare, Sparkles, StopCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import ModelSelector from "./ModelSelector";
 import ResponseCard from "./ResponseCard";
@@ -197,8 +196,6 @@ export default function MultiAIQuery() {
         return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
       case "rows":
         return "grid-cols-1";
-      case "tiles":
-        return "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5";
       default:
         return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
     }
@@ -210,7 +207,7 @@ export default function MultiAIQuery() {
       <div className="w-full lg:w-80 p-4 lg:p-6 flex flex-col gap-4 neon-card">
         <div className="flex items-center justify-between mb-2">
           <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-cyan-400 bg-clip-text text-transparent flex items-center gap-2 retro-text">
-            <Joystick className="h-6 w-6 text-pink-500" />
+            <Sparkles className="h-6 w-6 text-pink-500" />
             Multi-AI Query
           </h1>
           <SettingsDropdown viewLayout={viewLayout} setViewLayout={setViewLayout} />
@@ -249,16 +246,15 @@ export default function MultiAIQuery() {
                 )}
               </Button>
               
-              {isLoading && (
-                <Button 
-                  type="button" 
-                  variant="destructive"
-                  className="bg-red-500 hover:bg-red-600 shadow-red-neon"
-                  onClick={stopQuery}
-                >
-                  <StopCircle className="h-4 w-4" />
-                </Button>
-              )}
+              <Button 
+                type="button" 
+                variant="destructive"
+                className="bg-red-500 hover:bg-red-600 shadow-red-neon"
+                onClick={stopQuery}
+                disabled={!isLoading}
+              >
+                <StopCircle className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         </form>

@@ -66,6 +66,13 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				vaporwave: {
+					pink: 'hsl(var(--vaporwave-pink))',
+					cyan: 'hsl(var(--vaporwave-cyan))',
+					purple: 'hsl(var(--vaporwave-purple))',
+					indigo: 'hsl(var(--vaporwave-indigo))',
+					blue: 'hsl(var(--vaporwave-blue))'
 				}
 			},
 			borderRadius: {

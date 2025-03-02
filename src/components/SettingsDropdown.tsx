@@ -5,7 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { Toggle } from "@/components/ui/toggle";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ViewLayout } from "@/lib/types";
-import { AlignVertical, Grid, Moon, Rows, Settings, Sun } from "lucide-react";
+import { Columns, Moon, Rows, Settings, Sun } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useTheme } from "@/hooks/useTheme";
@@ -107,7 +107,7 @@ export default function SettingsDropdown({ viewLayout, setViewLayout }: Settings
                   className="justify-start data-[state=on]:bg-pink-500/30 data-[state=on]:text-cyan-400 dark:data-[state=on]:bg-pink-900/30 dark:data-[state=on]:text-cyan-300"
                   aria-label="Columns layout"
                 >
-                  <AlignVertical className="h-4 w-4 mr-2" />
+                  <Columns className="h-4 w-4 mr-2" />
                   Columns
                 </Toggle>
                 <Toggle
@@ -118,15 +118,6 @@ export default function SettingsDropdown({ viewLayout, setViewLayout }: Settings
                 >
                   <Rows className="h-4 w-4 mr-2" />
                   Rows
-                </Toggle>
-                <Toggle
-                  pressed={viewLayout === "tiles"}
-                  onPressedChange={() => setViewLayout("tiles")}
-                  className="justify-start data-[state=on]:bg-pink-500/30 data-[state=on]:text-cyan-400 dark:data-[state=on]:bg-pink-900/30 dark:data-[state=on]:text-cyan-300"
-                  aria-label="Tiles layout"
-                >
-                  <Grid className="h-4 w-4 mr-2" />
-                  Tiles
                 </Toggle>
               </div>
             </div>
