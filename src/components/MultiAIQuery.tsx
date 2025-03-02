@@ -202,7 +202,7 @@ export default function MultiAIQuery() {
         <div className="flex items-center justify-between mb-2">
           <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-cyan-400 bg-clip-text text-transparent flex items-center gap-2 retro-text">
             <Sparkles className="h-6 w-6 text-pink-500" />
-            BotSynth
+            OmniBot
           </h1>
           <SettingsDropdown viewLayout={viewLayout} setViewLayout={setViewLayout} />
         </div>
