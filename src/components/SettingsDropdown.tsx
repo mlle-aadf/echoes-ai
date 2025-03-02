@@ -4,11 +4,11 @@ import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Toggle } from "@/components/ui/toggle";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useTheme } from "@/hooks/useTheme";
 import { ViewLayout } from "@/lib/types";
 import { Columns, Grid, Moon, Rows, Settings, Sun } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { useTheme } from "@/hooks/useTheme";
 
 interface SettingsDropdownProps {
   viewLayout: ViewLayout;
