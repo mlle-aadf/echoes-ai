@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { usePuter } from "@/hooks/usePuter";
-import { queryClaude, queryDeepseek, queryGemini, queryGrok, queryOpenAI } from "@/lib/ai-clients";
+import { queryClaude, queryDeepseek, queryGemini, queryGrok, queryLlama, queryOpenAI } from "@/lib/ai-clients";
 import { ChevronDown, ChevronUp, Loader, MessageSquare, Sparkles } from "lucide-react";
 import { useState } from "react";
 
@@ -36,7 +36,7 @@ export default function MultiAIQuery() {
     { id: "claude", name: "Claude", queryFn: queryClaude },
     { id: "deepseek", name: "Deepseek", queryFn: queryDeepseek },
     { id: "grok", name: "Grok", queryFn: queryGrok },
-    // { id: "llama", name: "Meta Llama", queryFn: queryLlama },
+    { id: "llama", name: "Meta Llama", queryFn: queryLlama }
     // { id: "mistral", name: "Mistral", queryFn: queryMistral },
     // { id: "codestral", name: "Codestral", queryFn: queryCodestral },
     // { id: "gemma", name: "Gemma", queryFn: queryGemma }
