@@ -49,7 +49,7 @@ export default function MultiAIQuery() {
     { id: "claude", name: "Claude", queryFn: queryClaude },
     { id: "deepseek", name: "Deepseek", queryFn: queryDeepseek },
     { id: "grok", name: "Grok", queryFn: queryGrok },
-    { id: "llama", name: "Meta Llama", queryFn: queryLlama }
+    { id: "llama", name: "Llama", queryFn: queryLlama }
     // { id: "mistral", name: "Mistral", queryFn: queryMistral },
     // { id: "codestral", name: "Codestral", queryFn: queryCodestral },
     // { id: "gemma", name: "Gemma", queryFn: queryGemma }
