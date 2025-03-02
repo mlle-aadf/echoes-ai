@@ -1,6 +1,6 @@
 
-import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { AIModel } from "@/lib/types";
 import { Joystick } from "lucide-react";
 
@@ -28,7 +28,7 @@ export default function ModelSelector({
       <CardContent className="p-4">
         <h2 className="text-lg font-semibold mb-3 text-cyan-300 dark:text-cyan-400 flex items-center gap-2 retro-text">
           <Joystick className="h-4 w-4 text-pink-500" />
-          Select AI Models
+          Choose Your Models
         </h2>
         <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
           {sortedModels.map((model) => (
