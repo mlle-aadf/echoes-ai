@@ -8,22 +8,10 @@ import { usePuter } from "@/hooks/usePuter";
 import { queryClaude, queryDeepseek, queryGemini, queryGrok, queryLlama, queryOpenAI } from "@/lib/ai-clients";
 import { AIModel, AIResponse, ViewLayout } from "@/lib/types";
 import { Joystick, Loader, MessageSquare, Sparkles, StopCircle } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ModelSelector from "./ModelSelector";
 import ResponseCard from "./ResponseCard";
 import SettingsDropdown from "./SettingsDropdown";
-
-interface AIModel {
-  id: string;
-  name: string;
-  queryFn: (prompt: string) => Promise<AIResponse>;
-}
-
-interface AIResponse {
-  model: string;
-  response: string;
-  error?: string;
-}
 
 export default function MultiAIQuery() {
   const [prompt, setPrompt] = useState("");
@@ -36,6 +24,31 @@ export default function MultiAIQuery() {
   const { toast } = useToast();
   const { isPuterReady, error: puterError } = usePuter();
   const [abortController, setAbortController] = useState<AbortController | null>(null);
+  const [loadingText, setLoadingText] = useState("Querying...");
+
+  const loadingPhrases = [
+    "Summoning AI magic...",
+    "Consulting digital oracles...",
+    "Charging neural pathways...",
+    "Hacking the mainframe...",
+    "Powering up processors...",
+    "Teleporting data packets...",
+    "Scanning the cyberverse...",
+    "Entering the grid...",
+    "Loading cosmic algorithms...",
+    "Activating neon circuits..."
+  ];
+
+  useEffect(() => {
+    if (isLoading) {
+      const interval = setInterval(() => {
+        const randomIndex = Math.floor(Math.random() * loadingPhrases.length);
+        setLoadingText(loadingPhrases[randomIndex]);
+      }, 2000);
+      
+      return () => clearInterval(interval);
+    }
+  }, [isLoading]);
 
   const availableModels: AIModel[] = [
     { id: "gpt4", name: "GPT-4", queryFn: queryOpenAI },
@@ -226,7 +239,7 @@ export default function MultiAIQuery() {
                 {isLoading ? (
                   <>
                     <Loader className="mr-2 h-4 w-4 animate-spin" />
-                    Querying...
+                    {loadingText}
                   </>
                 ) : (
                   <>

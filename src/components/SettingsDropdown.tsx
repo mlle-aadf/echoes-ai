@@ -5,7 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { Toggle } from "@/components/ui/toggle";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ViewLayout } from "@/lib/types";
-import { Columns, Grid, Joystick, Moon, Rows, Settings, Sun } from "lucide-react";
+import { AlignVertical, Grid, Moon, Rows, Settings, Sun } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useTheme } from "@/hooks/useTheme";
@@ -100,20 +100,20 @@ export default function SettingsDropdown({ viewLayout, setViewLayout }: Settings
 
             <div>
               <h3 className="text-sm font-medium mb-2 text-cyan-300 dark:text-cyan-400">Layout</h3>
-              <div className="flex items-center justify-between gap-2">
+              <div className="flex flex-col gap-2">
                 <Toggle
                   pressed={viewLayout === "columns"}
                   onPressedChange={() => setViewLayout("columns")}
-                  className="flex-1 data-[state=on]:bg-pink-500/30 data-[state=on]:text-cyan-400 dark:data-[state=on]:bg-pink-900/30 dark:data-[state=on]:text-cyan-300"
+                  className="justify-start data-[state=on]:bg-pink-500/30 data-[state=on]:text-cyan-400 dark:data-[state=on]:bg-pink-900/30 dark:data-[state=on]:text-cyan-300"
                   aria-label="Columns layout"
                 >
-                  <Columns className="h-4 w-4 mr-2" />
+                  <AlignVertical className="h-4 w-4 mr-2" />
                   Columns
                 </Toggle>
                 <Toggle
                   pressed={viewLayout === "rows"}
                   onPressedChange={() => setViewLayout("rows")}
-                  className="flex-1 data-[state=on]:bg-pink-500/30 data-[state=on]:text-cyan-400 dark:data-[state=on]:bg-pink-900/30 dark:data-[state=on]:text-cyan-300"
+                  className="justify-start data-[state=on]:bg-pink-500/30 data-[state=on]:text-cyan-400 dark:data-[state=on]:bg-pink-900/30 dark:data-[state=on]:text-cyan-300"
                   aria-label="Rows layout"
                 >
                   <Rows className="h-4 w-4 mr-2" />
@@ -122,7 +122,7 @@ export default function SettingsDropdown({ viewLayout, setViewLayout }: Settings
                 <Toggle
                   pressed={viewLayout === "tiles"}
                   onPressedChange={() => setViewLayout("tiles")}
-                  className="flex-1 data-[state=on]:bg-pink-500/30 data-[state=on]:text-cyan-400 dark:data-[state=on]:bg-pink-900/30 dark:data-[state=on]:text-cyan-300"
+                  className="justify-start data-[state=on]:bg-pink-500/30 data-[state=on]:text-cyan-400 dark:data-[state=on]:bg-pink-900/30 dark:data-[state=on]:text-cyan-300"
                   aria-label="Tiles layout"
                 >
                   <Grid className="h-4 w-4 mr-2" />

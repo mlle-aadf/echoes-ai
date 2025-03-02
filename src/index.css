@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -90,6 +91,12 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'VT323', monospace;
+    font-size: 1.1rem;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Press Start 2P', cursive;
   }
 }
 
@@ -123,6 +130,8 @@
 .retro-text {
   text-shadow: 2px 2px 0px #ff00ff, -2px -2px 0px #00ffff;
   letter-spacing: 1px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.9em;
 }
 
 @keyframes gradient-shift {
