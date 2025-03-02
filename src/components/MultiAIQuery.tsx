@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
@@ -7,24 +6,11 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { usePuter } from "@/hooks/usePuter";
 import { queryClaude, queryDeepseek, queryGemini, queryGrok, queryLlama, queryOpenAI } from "@/lib/ai-clients";
 import { AIModel, AIResponse, ViewLayout } from "@/lib/types";
-import { Loader, MessageSquare, Sparkles } from "lucide-react";
-import { useState } from "react";
+import { Loader, MessageSquare, Sparkles, StopCircle } from "lucide-react";
+import { useState, useEffect } from "react";
 import ModelSelector from "./ModelSelector";
 import ResponseCard from "./ResponseCard";
 import SettingsDropdown from "./SettingsDropdown";
-import ViewControls from "./ViewControls";
-
-interface AIModel {
-  id: string;
-  name: string;
-  queryFn: (prompt: string) => Promise<AIResponse>;
-}
-
-interface AIResponse {
-  model: string;
-  response: string;
-  error?: string;
-}
 
 export default function MultiAIQuery() {
   const [prompt, setPrompt] = useState("");
@@ -33,9 +19,35 @@ export default function MultiAIQuery() {
   const [expandedCards, setExpandedCards] = useState<string[]>([]);
   const [maximizedCard, setMaximizedCard] = useState<string | null>(null);
   const [selectedModels, setSelectedModels] = useLocalStorage<string[]>("selectedModels", ["gpt4"]);
-  const [viewLayout, setViewLayout] = useState<ViewLayout>("columns");
+  const [viewLayout, setViewLayout] = useLocalStorage<ViewLayout>("viewLayout", "columns");
   const { toast } = useToast();
   const { isPuterReady, error: puterError } = usePuter();
+  const [abortController, setAbortController] = useState<AbortController | null>(null);
+  const [loadingText, setLoadingText] = useState("Querying...");
+
+  const loadingPhrases = [
+    "Summoning AI magic...",
+    "Consulting digital oracles...",
+    "Charging neural pathways...",
+    "Hacking the mainframe...",
+    "Powering up processors...",
+    "Teleporting data packets...",
+    "Scanning the cyberverse...",
+    "Entering the grid...",
+    "Loading cosmic algorithms...",
+    "Activating neon circuits..."
+  ];
+
+  useEffect(() => {
+    if (isLoading) {
+      const interval = setInterval(() => {
+        const randomIndex = Math.floor(Math.random() * loadingPhrases.length);
+        setLoadingText(loadingPhrases[randomIndex]);
+      }, 2000);
+      
+      return () => clearInterval(interval);
+    }
+  }, [isLoading]);
 
   const availableModels: AIModel[] = [
     { id: "gpt4", name: "GPT-4", queryFn: queryOpenAI },
@@ -91,10 +103,26 @@ export default function MultiAIQuery() {
     await queryModels();
   };
 
+  const stopQuery = () => {
+    if (abortController) {
+      abortController.abort();
+      setAbortController(null);
+      setIsLoading(false);
+      toast({
+        title: "Query Stopped",
+        description: "AI query has been stopped",
+      });
+    }
+  };
+
   const queryModels = async () => {
     setIsLoading(true);
     setResponses([]);
     setMaximizedCard(null);
+
+    // Create a new AbortController for this query
+    const controller = new AbortController();
+    setAbortController(controller);
 
     try {
       const selectedModelQueries = availableModels
@@ -102,6 +130,11 @@ export default function MultiAIQuery() {
         .map(model => model.queryFn(prompt));
 
       const results = await Promise.allSettled(selectedModelQueries);
+
+      // Check if the query was aborted
+      if (controller.signal.aborted) {
+        return;
+      }
 
       const formattedResponses = results.map((result, index) => {
         const modelId = selectedModels[index];
@@ -122,13 +155,18 @@ export default function MultiAIQuery() {
       setResponses(formattedResponses);
       setExpandedCards(selectedModels);
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to query AI models",
-        variant: "destructive",
-      });
+      if (!controller.signal.aborted) {
+        toast({
+          title: "Error",
+          description: "Failed to query AI models",
+          variant: "destructive",
+        });
+      }
     } finally {
-      setIsLoading(false);
+      if (!controller.signal.aborted) {
+        setIsLoading(false);
+        setAbortController(null);
+      }
     }
   };
 
@@ -158,20 +196,18 @@ export default function MultiAIQuery() {
         return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
       case "rows":
         return "grid-cols-1";
-      case "tiles":
-        return "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5";
       default:
         return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
     }
   };
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen w-full overflow-hidden bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+    <div className="flex flex-col lg:flex-row min-h-screen w-full overflow-hidden bg-gradient-to-br from-purple-800 to-indigo-900 dark:from-gray-900 dark:to-gray-800 vaporwave-bg">
       {/* Left sidebar for model selection and input */}
-      <div className="w-full lg:w-80 p-4 lg:p-6 flex flex-col gap-4">
+      <div className="w-full lg:w-80 p-4 lg:p-6 flex flex-col gap-4 neon-card">
         <div className="flex items-center justify-between mb-2">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-purple-600" />
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-cyan-400 bg-clip-text text-transparent flex items-center gap-2 retro-text">
+            <Sparkles className="h-6 w-6 text-pink-500" />
             Multi-AI Query
           </h1>
           <SettingsDropdown viewLayout={viewLayout} setViewLayout={setViewLayout} />
@@ -189,45 +225,49 @@ export default function MultiAIQuery() {
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Enter your prompt here..."
-              className="flex-grow mb-4 resize-none border-purple-200 focus-visible:ring-purple-400 min-h-[120px] bg-white/90 dark:bg-gray-900/90 shadow-md"
+              className="flex-grow mb-4 resize-none border-pink-300 focus-visible:ring-cyan-400 min-h-[120px] bg-indigo-900/40 dark:bg-gray-900/70 text-white placeholder:text-cyan-200/50 shadow-neon"
             />
-            <Button 
-              type="submit" 
-              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-md hover:shadow-lg"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <>
-                  <Loader className="mr-2 h-4 w-4 animate-spin" />
-                  Querying...
-                </>
-              ) : (
-                <>
-                  <MessageSquare className="mr-2 h-4 w-4" />
-                  Query Selected AIs
-                </>
-              )}
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                type="submit" 
+                className="w-full bg-gradient-to-r from-pink-500 to-cyan-500 hover:from-pink-600 hover:to-cyan-600 transition-all duration-300 shadow-neon hover:shadow-neon-lg disabled:opacity-50 disabled:pointer-events-none disabled:shadow-none"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader className="mr-2 h-4 w-4 animate-spin" />
+                    {loadingText}
+                  </>
+                ) : (
+                  <>
+                    <MessageSquare className="mr-2 h-4 w-4" />
+                    Query Selected AIs
+                  </>
+                )}
+              </Button>
+              
+              <Button 
+                type="button" 
+                variant="destructive"
+                className="bg-red-500 hover:bg-red-600 shadow-red-neon"
+                onClick={stopQuery}
+                disabled={!isLoading}
+              >
+                <StopCircle className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </form>
       </div>
 
       {/* Main content area for responses */}
       <div className="flex-1 p-4 lg:p-6 flex flex-col gap-4 relative">
-        {/* View controls */}
-        <ViewControls 
-          viewLayout={viewLayout}
-          setViewLayout={setViewLayout}
-          onRefresh={queryModels}
-          isLoading={isLoading}
-        />
-
         {/* Response grid */}
         <div className={`grid gap-4 ${getLayoutClass()} flex-1 overflow-y-auto relative`}>
           {isLoading ? (
             selectedModels.map((modelId) => (
               <div key={modelId} className="min-h-[200px]">
-                <Skeleton className="h-full w-full" />
+                <Skeleton className="h-full w-full bg-indigo-900/40 animate-pulse" />
               </div>
             ))
           ) : (

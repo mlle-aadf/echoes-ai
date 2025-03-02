@@ -1,30 +1,33 @@
 
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Light Theme - Much Brighter */
+    --background: 240 100% 97%;
+    --foreground: 252 100% 12%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 210 100% 98%;
+    --card-foreground: 252 90% 10%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 210 100% 98%;
+    --popover-foreground: 252 95% 8%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 283 90% 50%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 199 90% 90%;
+    --secondary-foreground: 252 95% 15%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 199 90% 85%;
+    --accent-foreground: 252 100% 12%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -35,7 +38,7 @@
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: 240 100% 97%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
     --sidebar-primary-foreground: 0 0% 98%;
@@ -43,29 +46,46 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Vaporwave Theme Colors */
+    --vaporwave-pink: 328 100% 59%;
+    --vaporwave-cyan: 187 100% 42%;
+    --vaporwave-purple: 265 84% 70%;
+    --vaporwave-indigo: 245 79% 52%;
+    --vaporwave-blue: 199 89% 48%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    /* Dark Theme - Much Darker */
+    --background: 252 50% 5%;
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
+    
+    --card: 252 40% 7%;
     --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
+    
+    --popover: 252 40% 7%;
     --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
+    
+    --primary: 283 90% 60%;
+    --primary-foreground: 252 10% 5%;
+    
+    --secondary: 246 40% 15%;
     --secondary-foreground: 210 40% 98%;
+    
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
+    
+    --accent: 246 35% 20%;
     --accent-foreground: 210 40% 98%;
+    
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
+    
+    --border: 246 30% 20%;
+    --input: 246 30% 20%;
     --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
+    
+    --sidebar-background: 252 40% 7%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
@@ -83,7 +103,72 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'VT323', monospace;
+    font-size: 1.1rem;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Press Start 2P', cursive;
+  }
+}
+
+/* Vaporwave Theme Classes */
+.vaporwave-bg {
+  background: linear-gradient(135deg, #2b0080, #9b87f5, #d946ef);
+  background-size: 400% 400%;
+  animation: gradient-shift 15s ease infinite;
+}
+
+.dark .vaporwave-bg {
+  background: linear-gradient(135deg, #15003d, #4b3789, #7e2097);
+  background-size: 400% 400%;
+  animation: gradient-shift 15s ease infinite;
+}
+
+.neon-card {
+  background-color: rgba(30, 20, 60, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  box-shadow: 0 0 15px rgba(155, 135, 245, 0.5);
+}
+
+.shadow-neon {
+  box-shadow: 0 0 10px rgba(214, 188, 250, 0.6);
+}
+
+.shadow-neon-lg {
+  box-shadow: 0 0 20px rgba(214, 188, 250, 0.8);
+}
+
+.shadow-red-neon {
+  box-shadow: 0 0 10px rgba(255, 100, 100, 0.7);
+}
+
+.retro-text {
+  text-shadow: 2px 2px 0px #ff00ff, -2px -2px 0px #00ffff;
+  letter-spacing: 1px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.9em;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Grid line background */
+.grid-lines {
+  background-image: linear-gradient(rgba(155, 135, 245, 0.2) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(155, 135, 245, 0.2) 1px, transparent 1px);
+  background-size: 30px 30px;
 }
 
 /* Animation keyframes */
@@ -109,20 +194,35 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(30, 20, 60, 0.3);
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(155, 135, 245, 0.4);
+  background: rgba(155, 135, 245, 0.6);
   border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(155, 135, 245, 0.7);
+  background: rgba(155, 135, 245, 0.8);
 }
 
 /* For Firefox */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(155, 135, 245, 0.4) transparent;
+  scrollbar-color: rgba(155, 135, 245, 0.6) rgba(30, 20, 60, 0.3);
+}
+
+/* Neon text glow animation */
+@keyframes neon-pulse {
+  0%, 100% {
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff00ff, 0 0 20px #ff00ff;
+  }
+  50% {
+    text-shadow: 0 0 5px #fff, 0 0 10px #00ffff, 0 0 15px #00ffff, 0 0 20px #00ffff;
+  }
+}
+
+.neon-text {
+  animation: neon-pulse 2s ease-in-out infinite;
+  color: white;
 }

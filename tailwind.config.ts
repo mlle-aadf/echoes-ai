@@ -19,6 +19,10 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				vt323: ['VT323', 'monospace'],
+				arcade: ['"Press Start 2P"', 'cursive'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -62,6 +66,13 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				vaporwave: {
+					pink: 'hsl(var(--vaporwave-pink))',
+					cyan: 'hsl(var(--vaporwave-cyan))',
+					purple: 'hsl(var(--vaporwave-purple))',
+					indigo: 'hsl(var(--vaporwave-indigo))',
+					blue: 'hsl(var(--vaporwave-blue))'
 				}
 			},
 			borderRadius: {

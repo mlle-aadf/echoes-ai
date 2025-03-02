@@ -7,7 +7,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useTheme } from "@/hooks/useTheme";
 import { ViewLayout } from "@/lib/types";
-import { Columns, Grid, Moon, Rows, Settings, Sun } from "lucide-react";
+import { Columns, Moon, Rows, Settings, Sun } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 interface SettingsDropdownProps {
@@ -64,47 +64,47 @@ export default function SettingsDropdown({ viewLayout, setViewLayout }: Settings
               variant="ghost"
               size="icon"
               onClick={toggleDropdown}
-              className="text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-gray-800"
+              className="text-cyan-400 dark:text-cyan-300 hover:bg-pink-500/20 dark:hover:bg-pink-900/30"
               aria-label="Settings"
             >
               <Settings className="h-5 w-5" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent className="bg-indigo-900/80 text-cyan-200 border-pink-300/30">
             <p>Settings</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
 
       {isOpen && (
-        <Card className="absolute right-0 z-50 mt-2 w-64 p-4 bg-white/95 dark:bg-gray-900/95 border-purple-100 dark:border-gray-700 shadow-lg backdrop-blur-sm animate-fade-in rounded-lg">
+        <Card className="absolute right-0 z-50 mt-2 w-64 p-4 bg-indigo-900/80 dark:bg-gray-900/80 border-pink-300/30 dark:border-pink-800/30 shadow-neon backdrop-blur-sm animate-fade-in rounded-lg">
           <div className="space-y-4">
             <div>
-              <h3 className="text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Theme</h3>
+              <h3 className="text-sm font-medium mb-2 text-cyan-300 dark:text-cyan-400">Theme</h3>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Sun className="h-4 w-4 text-amber-500" />
-                  <span className="text-sm">Light</span>
+                  <Sun className="h-4 w-4 text-amber-400" />
+                  <span className="text-sm text-cyan-200">Light</span>
                 </div>
                 <Switch
                   checked={theme === "dark"}
                   onCheckedChange={toggleTheme}
-                  className="data-[state=checked]:bg-purple-600"
+                  className="data-[state=checked]:bg-cyan-500"
                 />
                 <div className="flex items-center gap-2">
-                  <Moon className="h-4 w-4 text-indigo-400" />
-                  <span className="text-sm">Dark</span>
+                  <Moon className="h-4 w-4 text-indigo-300" />
+                  <span className="text-sm text-cyan-200">Dark</span>
                 </div>
               </div>
             </div>
 
             <div>
-              <h3 className="text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Layout</h3>
-              <div className="flex items-center justify-between gap-2">
+              <h3 className="text-sm font-medium mb-2 text-cyan-300 dark:text-cyan-400">Layout</h3>
+              <div className="flex flex-col gap-2">
                 <Toggle
                   pressed={viewLayout === "columns"}
                   onPressedChange={() => setViewLayout("columns")}
-                  className="flex-1 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-600 dark:data-[state=on]:bg-gray-800 dark:data-[state=on]:text-purple-400"
+                  className="justify-start data-[state=on]:bg-pink-500/30 data-[state=on]:text-cyan-400 dark:data-[state=on]:bg-pink-900/30 dark:data-[state=on]:text-cyan-300"
                   aria-label="Columns layout"
                 >
                   <Columns className="h-4 w-4 mr-2" />
@@ -113,20 +113,11 @@ export default function SettingsDropdown({ viewLayout, setViewLayout }: Settings
                 <Toggle
                   pressed={viewLayout === "rows"}
                   onPressedChange={() => setViewLayout("rows")}
-                  className="flex-1 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-600 dark:data-[state=on]:bg-gray-800 dark:data-[state=on]:text-purple-400"
+                  className="justify-start data-[state=on]:bg-pink-500/30 data-[state=on]:text-cyan-400 dark:data-[state=on]:bg-pink-900/30 dark:data-[state=on]:text-cyan-300"
                   aria-label="Rows layout"
                 >
                   <Rows className="h-4 w-4 mr-2" />
                   Rows
-                </Toggle>
-                <Toggle
-                  pressed={viewLayout === "tiles"}
-                  onPressedChange={() => setViewLayout("tiles")}
-                  className="flex-1 data-[state=on]:bg-purple-100 data-[state=on]:text-purple-600 dark:data-[state=on]:bg-gray-800 dark:data-[state=on]:text-purple-400"
-                  aria-label="Tiles layout"
-                >
-                  <Grid className="h-4 w-4 mr-2" />
-                  Tiles
                 </Toggle>
               </div>
             </div>
