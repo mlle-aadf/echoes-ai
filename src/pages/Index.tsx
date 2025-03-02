@@ -2,7 +2,11 @@
 import MultiAIQuery from "@/components/MultiAIQuery";
 
 const Index = () => {
-  return <MultiAIQuery />;
+  return (
+    <div className="w-full h-full">
+      <MultiAIQuery />
+    </div>
+  );
 };
 
 export default Index;
