@@ -2,7 +2,7 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import { AIModel } from "@/lib/types";
-import { Sparkles } from "lucide-react";
+import { Joystick } from "lucide-react";
 
 interface ModelSelectorProps {
   availableModels: AIModel[];
@@ -24,19 +24,19 @@ export default function ModelSelector({
   });
 
   return (
-    <Card className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-purple-100 dark:border-gray-700 shadow-md h-full">
+    <Card className="bg-indigo-900/40 dark:bg-gray-900/70 backdrop-blur-sm border-pink-300/30 dark:border-pink-800/30 shadow-neon h-full">
       <CardContent className="p-4">
-        <h2 className="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-300 flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-purple-600" />
+        <h2 className="text-lg font-semibold mb-3 text-cyan-300 dark:text-cyan-400 flex items-center gap-2 retro-text">
+          <Joystick className="h-4 w-4 text-pink-500" />
           Select AI Models
         </h2>
         <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
           {sortedModels.map((model) => (
             <div
               key={model.id}
-              className={`flex items-center space-x-2 hover:bg-purple-50 dark:hover:bg-gray-800 p-2 rounded-md transition-colors ${
+              className={`flex items-center space-x-2 hover:bg-indigo-800/40 dark:hover:bg-gray-800/40 p-2 rounded-md transition-colors ${
                 selectedModels.includes(model.id)
-                  ? "bg-purple-50 dark:bg-gray-800"
+                  ? "bg-indigo-800/50 dark:bg-gray-800/50"
                   : ""
               }`}
             >
@@ -44,11 +44,11 @@ export default function ModelSelector({
                 id={model.id}
                 checked={selectedModels.includes(model.id)}
                 onCheckedChange={() => onToggleModel(model.id)}
-                className="border-purple-400 data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600"
+                className="border-pink-400 data-[state=checked]:bg-cyan-500 data-[state=checked]:border-cyan-500"
               />
               <label
                 htmlFor={model.id}
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer text-cyan-200"
               >
                 {model.name}
               </label>

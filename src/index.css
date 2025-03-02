@@ -43,6 +43,13 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Vaporwave Theme Colors */
+    --vaporwave-pink: 328 100% 59%;
+    --vaporwave-cyan: 187 100% 42%;
+    --vaporwave-purple: 265 84% 70%;
+    --vaporwave-indigo: 245 79% 52%;
+    --vaporwave-blue: 199 89% 48%;
   }
 
   .dark {
@@ -86,6 +93,57 @@
   }
 }
 
+/* Vaporwave Theme Classes */
+.vaporwave-bg {
+  background: linear-gradient(135deg, #2b0080, #9b87f5, #d946ef);
+  background-size: 400% 400%;
+  animation: gradient-shift 15s ease infinite;
+}
+
+.neon-card {
+  background-color: rgba(30, 20, 60, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  box-shadow: 0 0 15px rgba(155, 135, 245, 0.5);
+}
+
+.shadow-neon {
+  box-shadow: 0 0 10px rgba(214, 188, 250, 0.6);
+}
+
+.shadow-neon-lg {
+  box-shadow: 0 0 20px rgba(214, 188, 250, 0.8);
+}
+
+.shadow-red-neon {
+  box-shadow: 0 0 10px rgba(255, 100, 100, 0.7);
+}
+
+.retro-text {
+  text-shadow: 2px 2px 0px #ff00ff, -2px -2px 0px #00ffff;
+  letter-spacing: 1px;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Grid line background */
+.grid-lines {
+  background-image: linear-gradient(rgba(155, 135, 245, 0.2) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(155, 135, 245, 0.2) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
 /* Animation keyframes */
 @keyframes fadeIn {
   from {
@@ -109,20 +167,35 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(30, 20, 60, 0.3);
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(155, 135, 245, 0.4);
+  background: rgba(155, 135, 245, 0.6);
   border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(155, 135, 245, 0.7);
+  background: rgba(155, 135, 245, 0.8);
 }
 
 /* For Firefox */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(155, 135, 245, 0.4) transparent;
+  scrollbar-color: rgba(155, 135, 245, 0.6) rgba(30, 20, 60, 0.3);
+}
+
+/* Neon text glow animation */
+@keyframes neon-pulse {
+  0%, 100% {
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff00ff, 0 0 20px #ff00ff;
+  }
+  50% {
+    text-shadow: 0 0 5px #fff, 0 0 10px #00ffff, 0 0 15px #00ffff, 0 0 20px #00ffff;
+  }
+}
+
+.neon-text {
+  animation: neon-pulse 2s ease-in-out infinite;
+  color: white;
 }
