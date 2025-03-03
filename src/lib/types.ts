@@ -11,4 +11,9 @@ export interface AIResponse {
   error?: string;
 }
 
-export type ViewLayout = "columns" | "rows" | "tiles";
+export type ViewLayout = "columns" | "rows";
+
+export interface Task {
+  name: string;
+  description: string;
+}

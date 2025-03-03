@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import ModelSelector from "./ModelSelector";
 import ResponseCard from "./ResponseCard";
 import SettingsDropdown from "./SettingsDropdown";
+import TaskSelector from "./TaskSelector";
 
 export default function MultiAIQuery() {
   const [prompt, setPrompt] = useState("");
@@ -186,6 +187,10 @@ export default function MultiAIQuery() {
     );
   };
 
+  const handleTaskSelect = (modelIds: string[]) => {
+    setSelectedModels(modelIds);
+  };
+
   const getLayoutClass = () => {
     switch (viewLayout) {
       case "columns":
@@ -199,7 +204,7 @@ export default function MultiAIQuery() {
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen w-full overflow-hidden bg-gradient-to-br from-purple-800 to-indigo-900 dark:from-gray-900 dark:to-gray-800 vaporwave-bg">
-      <div className="w-full lg:w-80 p-4 lg:p-6 flex flex-col gap-4 neon-card lg:max-h-screen overflow-y-auto custom-scrollbar">
+      <div className="w-full lg:w-96 p-4 lg:p-6 flex flex-col gap-4 neon-card lg:max-h-screen overflow-y-auto custom-scrollbar">
         <div className="flex items-center justify-between mb-2">
           <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-cyan-400 bg-clip-text text-transparent flex items-center gap-2 retro-text">
             <Sparkles className="h-6 w-6 text-pink-500" />
@@ -213,6 +218,11 @@ export default function MultiAIQuery() {
             availableModels={availableModels} 
             selectedModels={selectedModels}
             onToggleModel={toggleModel}
+          />
+
+          <TaskSelector
+            availableModels={availableModels}
+            onSelectTask={handleTaskSelect}
           />
 
           <div className="flex flex-col min-h-0 mt-4">
