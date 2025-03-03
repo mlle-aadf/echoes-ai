@@ -7,7 +7,7 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { usePuter } from "@/hooks/usePuter";
 import { queryClaude, queryDeepseek, queryGemini, queryGemma, queryGrok, queryLlama, queryMistral, queryOpenAI } from "@/lib/ai-clients";
 import { AIModel, AIResponse, ViewLayout } from "@/lib/types";
-import { Bot, Loader, MessageSquare, Sparkles, StopCircle } from "lucide-react";
+import { Loader, MessageSquare, Sparkles, StopCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import ModelSelector from "./ModelSelector";
 import ResponseCard from "./ResponseCard";
@@ -223,10 +223,6 @@ export default function MultiAIQuery() {
         
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 flex-1 max-h-[calc(100vh-150px)]">
           <div className="flex flex-col">
-            <div className="flex items-center gap-2 mb-2">
-              <Bot className="h-5 w-5 text-pink-500 pixel-art" />
-              <h2 className="text-lg text-cyan-300 dark:text-cyan-400 truncate retro-text">Choose Your Bots</h2>
-            </div>
             <div className="max-h-[30vh] overflow-y-auto custom-scrollbar">
               <ModelSelector 
                 availableModels={availableModels} 
