@@ -1,12 +1,13 @@
+
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { usePuter } from "@/hooks/usePuter";
-import { queryClaude, queryDeepseek, queryGemini, queryGrok, queryLlama, queryOpenAI } from "@/lib/ai-clients";
+import { queryClaude, queryDeepseek, queryGemini, queryGemma, queryGrok, queryLlama, queryMistral, queryOpenAI } from "@/lib/ai-clients";
 import { AIModel, AIResponse, ViewLayout } from "@/lib/types";
-import { Loader, MessageSquare, Sparkles, StopCircle } from "lucide-react";
+import { Bot, Loader, MessageSquare, Sparkles, StopCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import ModelSelector from "./ModelSelector";
 import ResponseCard from "./ResponseCard";
@@ -54,7 +55,9 @@ export default function MultiAIQuery() {
     { id: "claude", name: "Claude", queryFn: queryClaude },
     { id: "deepseek", name: "Deepseek", queryFn: queryDeepseek },
     { id: "grok", name: "Grok", queryFn: queryGrok },
-    { id: "llama", name: "Llama", queryFn: queryLlama }
+    { id: "llama", name: "Llama", queryFn: queryLlama },
+    { id: "mistral", name: "Mistral", queryFn: queryMistral },
+    { id: "gemma", name: "Gemma", queryFn: queryGemma }
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -202,11 +205,16 @@ export default function MultiAIQuery() {
     }
   };
 
+  // Filter responses based on selected models
+  const visibleResponses = responses.filter((_, index) => 
+    selectedModels.includes(selectedModels[index])
+  );
+
   return (
     <div className="flex flex-col lg:flex-row min-h-screen w-full overflow-hidden bg-gradient-to-br from-purple-800 to-indigo-900 dark:from-gray-900 dark:to-gray-800 vaporwave-bg">
-      <div className="w-full lg:w-96 p-4 lg:p-6 flex flex-col gap-4 neon-card lg:max-h-screen overflow-y-auto custom-scrollbar">
+      <div className="w-full lg:w-1/4 p-4 lg:p-6 flex flex-col gap-4 neon-card lg:max-h-screen overflow-y-auto custom-scrollbar">
         <div className="flex items-center justify-between mb-2">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-cyan-400 bg-clip-text text-transparent flex items-center gap-2 retro-text">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-cyan-400 bg-clip-text text-transparent flex items-center gap-2 omnibot-title">
             <Sparkles className="h-6 w-6 text-pink-500" />
             OmniBot
           </h1>
@@ -214,11 +222,19 @@ export default function MultiAIQuery() {
         </div>
         
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 flex-1 max-h-[calc(100vh-150px)]">
-          <ModelSelector 
-            availableModels={availableModels} 
-            selectedModels={selectedModels}
-            onToggleModel={toggleModel}
-          />
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2 mb-2">
+              <Bot className="h-5 w-5 text-pink-500 pixel-art" />
+              <h2 className="text-lg text-cyan-300 dark:text-cyan-400 truncate retro-text">Choose Your Bots</h2>
+            </div>
+            <div className="max-h-[30vh] overflow-y-auto custom-scrollbar">
+              <ModelSelector 
+                availableModels={availableModels} 
+                selectedModels={selectedModels}
+                onToggleModel={toggleModel}
+              />
+            </div>
+          </div>
 
           <TaskSelector
             availableModels={availableModels}
@@ -266,7 +282,7 @@ export default function MultiAIQuery() {
       </div>
 
       <div className="flex-1 p-4 lg:p-6 flex flex-col gap-4 relative overflow-hidden">
-        <div className={`grid gap-4 ${getLayoutClass()} flex-1 overflow-y-auto overflow-x-hidden relative`}>
+        <div className={`grid gap-4 ${getLayoutClass()} flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar`}>
           {isLoading ? (
             selectedModels.map((modelId) => (
               <div key={modelId} className="min-h-[200px]">
@@ -276,6 +292,9 @@ export default function MultiAIQuery() {
           ) : (
             responses.map((response, index) => {
               const modelId = selectedModels[index];
+              // Only render response card if model is selected
+              if (!selectedModels.includes(modelId)) return null;
+              
               const isExpanded = expandedCards.includes(modelId);
               const isMaximized = maximizedCard === modelId;
 
@@ -291,6 +310,7 @@ export default function MultiAIQuery() {
                     isMaximized={isMaximized}
                     onToggleExpand={() => toggleCard(modelId)}
                     onToggleMaximize={() => toggleMaximize(modelId)}
+                    viewLayout={viewLayout}
                   />
                 </div>
               );

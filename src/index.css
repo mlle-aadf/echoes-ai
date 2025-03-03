@@ -146,9 +146,15 @@
 
 .retro-text {
   text-shadow: 2px 2px 0px #ff00ff;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   font-family: 'Press Start 2P', cursive;
   font-size: 0.9em;
+}
+
+.omnibot-title {
+  letter-spacing: 3px;
+  text-align: center;
+  text-shadow: 2px 2px 0px #ff00ff, -2px -2px 0px #00ffff;
 }
 
 @keyframes gradient-shift {

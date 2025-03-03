@@ -17,9 +17,9 @@ export const tasks: Task[] = [
 
 export const taskModelMapping: Record<string, string[]> = {
   "Search for Information": ["Gemini", "Grok", "Deepseek"],
-  "Generate Text": ["GPT-4", "Claude", "Llama"],
+  "Generate Text": ["GPT-4", "Claude", "Llama", "Mistral"],
   "Summarize Text": ["Claude", "GPT-4", "Gemini"],
-  "Translate Text": ["Deepseek", "Llama"],
+  "Translate Text": ["Deepseek", "Mistral", "Llama"],
   "Code Assistance": ["GPT-4", "Deepseek", "Gemini"],
   "Logical Problem-Solving": ["GPT-4", "Claude", "Deepseek"]
 };
