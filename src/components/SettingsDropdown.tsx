@@ -89,7 +89,7 @@ export default function SettingsDropdown({ viewLayout, setViewLayout }: Settings
                 <Switch
                   checked={theme === "dark"}
                   onCheckedChange={toggleTheme}
-                  className="data-[state=checked]:bg-cyan-500"
+                  className="data-[state=checked]:bg-cyan-500 data-[state=unchecked]:bg-amber-400 dark:data-[state=unchecked]:bg-amber-400"
                 />
                 <div className="flex items-center gap-2">
                   <Moon className="h-4 w-4 text-indigo-300" />

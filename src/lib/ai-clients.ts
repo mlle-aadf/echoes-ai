@@ -164,8 +164,53 @@ export async function queryLlama(prompt: string): Promise<AIResponse> {
   }
 }
 
+export async function queryMistral(prompt: string): Promise<AIResponse> {
+  try {
+    ensurePuter();
+    const response = await window.puter.ai.chat(prompt, {
+      model: 'mistral-large-latest' 
+    });
 
+    console.log("Mistral Response:", response);
 
+    const content = response.message?.content;
+    if (!content) {
+      throw new Error("Invalid response structure");
+    }
+
+    return {
+      model: "Mistral",
+      response: content,
+    };
+  } catch (error) {
+    console.error("Mistral Error:", error);
+    throw error;
+  }
+}
+
+export async function queryGemma(prompt: string): Promise<AIResponse> {
+  try {
+    ensurePuter();
+    const response = await window.puter.ai.chat(prompt, {
+      model: 'google/gemma-2-27b-it' 
+    });
+
+    console.log("Gemma Response:", response);
+
+    const content = response.message?.content;
+    if (!content) {
+      throw new Error("Invalid response structure");
+    }
+
+    return {
+      model: "Gemma",
+      response: content,
+    };
+  } catch (error) {
+    console.error("Gemma Error:", error);
+    throw error;
+  }
+}
 
 // Simple in-memory cache for responses
 const responseCache = new Map<string, AIResponse>();
@@ -184,6 +229,5 @@ export async function queryCachedAI(
   responseCache.set(cacheKey, response);
   return response;
 }
-
 
 // https://docs.puter.com/prompt.md

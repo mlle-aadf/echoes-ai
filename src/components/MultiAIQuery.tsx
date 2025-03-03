@@ -1,16 +1,18 @@
+
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { usePuter } from "@/hooks/usePuter";
-import { queryClaude, queryDeepseek, queryGemini, queryGrok, queryLlama, queryOpenAI } from "@/lib/ai-clients";
+import { queryClaude, queryDeepseek, queryGemini, queryGemma, queryGrok, queryLlama, queryMistral, queryOpenAI } from "@/lib/ai-clients";
 import { AIModel, AIResponse, ViewLayout } from "@/lib/types";
-import { Loader, MessageSquare, Sparkles, StopCircle } from "lucide-react";
+import { Bot, Loader, MessageSquare, Sparkles, StopCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import ModelSelector from "./ModelSelector";
 import ResponseCard from "./ResponseCard";
 import SettingsDropdown from "./SettingsDropdown";
+import TaskSelector from "./TaskSelector";
 
 export default function MultiAIQuery() {
   const [prompt, setPrompt] = useState("");
@@ -18,7 +20,7 @@ export default function MultiAIQuery() {
   const [responses, setResponses] = useState<AIResponse[]>([]);
   const [expandedCards, setExpandedCards] = useState<string[]>([]);
   const [maximizedCard, setMaximizedCard] = useState<string | null>(null);
-  const [selectedModels, setSelectedModels] = useLocalStorage<string[]>("selectedModels", ["gpt4"]);
+  const [selectedModels, setSelectedModels] = useLocalStorage<string[]>("selectedModels", []);
   const [viewLayout, setViewLayout] = useLocalStorage<ViewLayout>("viewLayout", "columns");
   const { toast } = useToast();
   const { isPuterReady, error: puterError } = usePuter();
@@ -29,7 +31,11 @@ export default function MultiAIQuery() {
     "Powering up processors...",
     "Scanning the cyberverse...",
     "Loading cosmic algorithms...",
-    "Summoning AI magic..."
+    "Summoning AI magic...",
+    "Interfacing with bots...",
+    "Consulting digital oracles...",
+    "Mining data crystals...",
+    "Enhancing neural networks..."
   ];
 
   useEffect(() => {
@@ -49,10 +55,9 @@ export default function MultiAIQuery() {
     { id: "claude", name: "Claude", queryFn: queryClaude },
     { id: "deepseek", name: "Deepseek", queryFn: queryDeepseek },
     { id: "grok", name: "Grok", queryFn: queryGrok },
-    { id: "llama", name: "Llama", queryFn: queryLlama }
-    // { id: "mistral", name: "Mistral", queryFn: queryMistral },
-    // { id: "codestral", name: "Codestral", queryFn: queryCodestral },
-    // { id: "gemma", name: "Gemma", queryFn: queryGemma }
+    { id: "llama", name: "Llama", queryFn: queryLlama },
+    { id: "mistral", name: "Mistral", queryFn: queryMistral },
+    { id: "gemma", name: "Gemma", queryFn: queryGemma }
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -114,7 +119,6 @@ export default function MultiAIQuery() {
     setResponses([]);
     setMaximizedCard(null);
 
-    // Create a new AbortController for this query
     const controller = new AbortController();
     setAbortController(controller);
 
@@ -125,7 +129,6 @@ export default function MultiAIQuery() {
 
       const results = await Promise.allSettled(selectedModelQueries);
 
-      // Check if the query was aborted
       if (controller.signal.aborted) {
         return;
       }
@@ -165,11 +168,14 @@ export default function MultiAIQuery() {
   };
 
   const toggleCard = (modelId: string) => {
-    setExpandedCards(prev => 
-      prev.includes(modelId) 
-        ? prev.filter(id => id !== modelId)
-        : [...prev, modelId]
-    );
+    if (expandedCards.includes(modelId)) {
+      if (maximizedCard === modelId) {
+        setMaximizedCard(null);
+      }
+      setExpandedCards(prev => prev.filter(id => id !== modelId));
+    } else {
+      setExpandedCards(prev => [...prev, modelId]);
+    }
   };
 
   const toggleMaximize = (modelId: string) => {
@@ -184,6 +190,10 @@ export default function MultiAIQuery() {
     );
   };
 
+  const handleTaskSelect = (modelIds: string[]) => {
+    setSelectedModels(modelIds);
+  };
+
   const getLayoutClass = () => {
     switch (viewLayout) {
       case "columns":
@@ -195,31 +205,48 @@ export default function MultiAIQuery() {
     }
   };
 
+  // Filter responses based on selected models
+  const visibleResponses = responses.filter((_, index) => 
+    selectedModels.includes(selectedModels[index])
+  );
+
   return (
     <div className="flex flex-col lg:flex-row min-h-screen w-full overflow-hidden bg-gradient-to-br from-purple-800 to-indigo-900 dark:from-gray-900 dark:to-gray-800 vaporwave-bg">
-      {/* Left sidebar for model selection and input */}
-      <div className="w-full lg:w-80 p-4 lg:p-6 flex flex-col gap-4 neon-card">
+      <div className="w-full lg:w-1/4 p-4 lg:p-6 flex flex-col gap-4 neon-card lg:max-h-screen overflow-y-auto custom-scrollbar">
         <div className="flex items-center justify-between mb-2">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-cyan-400 bg-clip-text text-transparent flex items-center gap-2 retro-text">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-cyan-400 bg-clip-text text-transparent flex items-center gap-2 omnibot-title">
             <Sparkles className="h-6 w-6 text-pink-500" />
             OmniBot
           </h1>
           <SettingsDropdown viewLayout={viewLayout} setViewLayout={setViewLayout} />
         </div>
         
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 flex-1">
-          <ModelSelector 
-            availableModels={availableModels} 
-            selectedModels={selectedModels}
-            onToggleModel={toggleModel}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 flex-1 max-h-[calc(100vh-150px)]">
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2 mb-2">
+              <Bot className="h-5 w-5 text-pink-500 pixel-art" />
+              <h2 className="text-lg text-cyan-300 dark:text-cyan-400 truncate retro-text">Choose Your Bots</h2>
+            </div>
+            <div className="max-h-[30vh] overflow-y-auto custom-scrollbar">
+              <ModelSelector 
+                availableModels={availableModels} 
+                selectedModels={selectedModels}
+                onToggleModel={toggleModel}
+              />
+            </div>
+          </div>
+
+          <TaskSelector
+            availableModels={availableModels}
+            onSelectTask={handleTaskSelect}
           />
 
-          <div className="flex-grow flex flex-col min-h-0 mt-4">
+          <div className="flex flex-col min-h-0 mt-4">
             <Textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Enter your prompt here..."
-              className="flex-grow mb-4 resize-none border-pink-300 focus-visible:ring-cyan-400 min-h-[120px] bg-indigo-900/40 dark:bg-gray-900/70 text-white placeholder:text-cyan-200/50 shadow-neon"
+              className="mb-4 resize-none border-pink-300 focus-visible:ring-cyan-400 min-h-[120px] max-h-[20vh] bg-indigo-900/40 dark:bg-gray-900/70 text-white placeholder:text-cyan-200/50 shadow-neon"
             />
             <div className="flex gap-2">
               <Button 
@@ -254,10 +281,8 @@ export default function MultiAIQuery() {
         </form>
       </div>
 
-      {/* Main content area for responses */}
-      <div className="flex-1 p-4 lg:p-6 flex flex-col gap-4 relative">
-        {/* Response grid */}
-        <div className={`grid gap-4 ${getLayoutClass()} flex-1 overflow-y-auto relative`}>
+      <div className="flex-1 p-4 lg:p-6 flex flex-col gap-4 relative overflow-hidden">
+        <div className={`grid gap-4 ${getLayoutClass()} flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar`}>
           {isLoading ? (
             selectedModels.map((modelId) => (
               <div key={modelId} className="min-h-[200px]">
@@ -267,13 +292,16 @@ export default function MultiAIQuery() {
           ) : (
             responses.map((response, index) => {
               const modelId = selectedModels[index];
+              // Only render response card if model is selected
+              if (!selectedModels.includes(modelId)) return null;
+              
               const isExpanded = expandedCards.includes(modelId);
               const isMaximized = maximizedCard === modelId;
 
               return (
                 <div 
                   key={modelId} 
-                  className={`min-h-[200px] ${isMaximized ? 'col-span-full row-span-full' : ''}`}
+                  className={`${isExpanded ? 'min-h-[200px]' : 'h-auto'} ${isMaximized ? 'col-span-full row-span-full' : ''}`}
                   style={{ zIndex: isMaximized ? 10 : 1 }}
                 >
                   <ResponseCard
@@ -282,6 +310,7 @@ export default function MultiAIQuery() {
                     isMaximized={isMaximized}
                     onToggleExpand={() => toggleCard(modelId)}
                     onToggleMaximize={() => toggleMaximize(modelId)}
+                    viewLayout={viewLayout}
                   />
                 </div>
               );

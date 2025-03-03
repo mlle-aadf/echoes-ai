@@ -2,7 +2,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { AIModel } from "@/lib/types";
-import { Joystick } from "lucide-react";
+import { Bot } from "lucide-react";
 
 interface ModelSelectorProps {
   availableModels: AIModel[];
@@ -24,13 +24,13 @@ export default function ModelSelector({
   });
 
   return (
-    <Card className="bg-indigo-900/40 dark:bg-gray-900/70 backdrop-blur-sm border-pink-300/30 dark:border-pink-800/30 shadow-neon h-full">
+    <Card className="bg-indigo-900/40 dark:bg-gray-900/70 backdrop-blur-sm border-pink-300/30 dark:border-pink-800/30 shadow-neon h-auto max-h-[30vh]">
       <CardContent className="p-4">
-        <h4 className="text-lg font-semibold mb-3 text-cyan-300 dark:text-cyan-400 flex items-center gap-2 retro-text">
-          <Joystick className="h-4 w-4 text-pink-500" />
-          Choose Bots
+        <h4 className="text-base font-semibold mb-3 text-cyan-300 dark:text-cyan-400 flex items-center gap-2 retro-text">
+          <Bot className="h-4 w-4 text-pink-500 pixel-art flex-shrink-0" />
+          <span className="truncate">Choose Your Bots</span>
         </h4>
-        <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+        <div className="space-y-3 max-h-[calc(30vh-80px)] overflow-y-auto pr-2 custom-scrollbar">
           {sortedModels.map((model) => (
             <div
               key={model.id}
