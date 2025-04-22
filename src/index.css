@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap');
 
 @tailwind base;
@@ -52,6 +53,9 @@
     --vaporwave-purple: 265 84% 70%;
     --vaporwave-indigo: 245 79% 52%;
     --vaporwave-blue: 199 89% 48%;
+    
+    /* Sun color for theme toggle */
+    --theme-sun: 60 100% 60%;
   }
 
   .dark {
@@ -92,6 +96,9 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Moon color for theme toggle */
+    --theme-moon: 220 30% 20%;
   }
 }
 
@@ -247,4 +254,114 @@
 /* Fix for max height on sidebar */
 .lg:max-h-screen {
   max-height: 100vh;
+}
+
+/* New animations for UI improvements */
+@keyframes border-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Gradient border animation */
+.gradient-border {
+  position: relative;
+  z-index: 0;
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -2px;
+  border-radius: calc(var(--radius) + 2px);
+  background: linear-gradient(135deg, #ff00ff, #00ffff, #d946ef, #0ea5e9);
+  background-size: 300% 300%;
+  animation: border-flow 4s linear infinite;
+  opacity: 0.7;
+}
+
+/* Enhanced button hover state */
+.enhanced-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.enhanced-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  z-index: 0;
+}
+
+.enhanced-button:hover::before {
+  transform: translateY(0);
+}
+
+.enhanced-button > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Sticky query button for mobile */
+@media (max-width: 640px) {
+  .query-button-sticky {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    z-index: 50;
+  }
+}
+
+/* Scale animation for cards */
+@keyframes scale-in {
+  from {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-scale-in {
+  animation: scale-in 0.2s ease-out forwards;
+}
+
+/* Theme toggle animation */
+.theme-toggle {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s ease;
+}
+
+.theme-toggle .sun-icon {
+  color: hsl(var(--theme-sun));
+  transition: all 0.5s ease;
+}
+
+.theme-toggle .moon-icon {
+  color: hsl(var(--theme-moon));
+  transition: all 0.5s ease;
+}
+
+/* Improve focus states for accessibility */
+.focus-visible-ring:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(155, 135, 245, 0.5);
 }
