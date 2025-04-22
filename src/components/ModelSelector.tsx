@@ -11,16 +11,16 @@ interface ModelSelectorProps {
   onToggleModel: (modelId: string) => void;
 }
 
-// Model descriptions for tooltips
+// Model descriptions for tooltips - kept succinct
 const modelDescriptions: Record<string, string> = {
-  gpt4: "Powerful language model for complex reasoning and creative tasks",
-  gemini: "Google's large language model with strong reasoning capabilities",
-  claude: "Anthropic's AI assistant with detailed writing and reasoning",
-  deepseek: "Advanced model optimized for coding and technical tasks",
-  grok: "Witty and conversational model with real-time information",
-  llama: "Meta's large language model with broad capabilities",
-  mistral: "High-performance model with excellent reasoning abilities",
-  gemma: "Google's lightweight yet powerful open model"
+  gpt4: "Advanced reasoning and creative capabilities",
+  gemini: "Strong reasoning with real-time information",
+  claude: "Detailed writing and analysis",
+  deepseek: "Optimized for technical and coding tasks",
+  grok: "Witty conversational assistant",
+  llama: "Versatile large language model",
+  mistral: "Strong reasoning and problem-solving",
+  gemma: "Lightweight yet powerful assistant"
 };
 
 export default function ModelSelector({
@@ -38,7 +38,7 @@ export default function ModelSelector({
 
   return (
     <TooltipProvider>
-      <Card className="bg-indigo-900/40 dark:bg-gray-900/70 backdrop-blur-sm border-pink-300/30 dark:border-pink-800/30 shadow-neon h-auto max-h-[30vh]">
+      <Card className="bg-indigo-900/40 dark:bg-gray-900/70 backdrop-blur-sm border-pink-300/30 dark:border-pink-800/30 shadow-neon h-auto max-h-[30vh] w-full lg:w-auto">
         <CardContent className="p-4">
           <h4 className="text-base font-semibold mb-3 text-cyan-300 dark:text-cyan-400 flex items-center gap-2 retro-text text-center">
             <Bot className="h-4 w-4 text-pink-500 pixel-art flex-shrink-0" />
@@ -70,7 +70,7 @@ export default function ModelSelector({
                     <HelpCircle className="h-3 w-3 text-pink-400/70 opacity-50 hover:opacity-100 transition-opacity" />
                   </div>
                 </TooltipTrigger>
-                <TooltipContent side="right" className="bg-indigo-950/90 border-pink-500/30 text-cyan-100 max-w-[200px]">
+                <TooltipContent side="top" className="bg-indigo-950/90 border-pink-500/30 text-cyan-100">
                   {modelDescriptions[model.id] || `${model.name} AI assistant`}
                 </TooltipContent>
               </Tooltip>
