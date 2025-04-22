@@ -1,3 +1,4 @@
+
 export interface AIModel {
   id: string;
   name: string;
@@ -10,7 +11,6 @@ export interface AIResponse {
   error?: string;
 }
 
-// Make sure ViewLayout doesn't include 'tiles'
 export type ViewLayout = "columns" | "rows";
 
 export interface Task {

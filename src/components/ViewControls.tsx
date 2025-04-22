@@ -57,6 +57,24 @@ export default function ViewControls({
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={viewLayout === "tiles" ? "bg-purple-100 dark:bg-gray-800" : ""}
+                  onClick={() => setViewLayout("tiles")}
+                >
+                  <Grid className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Tiles View</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
 
         <TooltipProvider>
