@@ -289,8 +289,8 @@ export default function MultiAIQuery() {
           </div>
         </div>
         
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3 lg:gap-4 flex-1 max-h-[calc(100vh-120px)] lg:max-h-[calc(100vh-150px)]">
-          <div className="flex flex-col gap-3 lg:gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3 lg:gap-4 flex-1 min-h-0">
+          <div className="flex flex-col gap-3 lg:gap-4 flex-shrink-0">
             <div className="custom-scrollbar max-h-[30vh] lg:max-h-none overflow-y-auto">
               <ModelSelector 
                 availableModels={availableModels} 
@@ -305,7 +305,7 @@ export default function MultiAIQuery() {
             />
           </div>
 
-          <div className="flex flex-col min-h-0 mt-2 lg:mt-4 group relative">
+          <div className="flex flex-col flex-1 min-h-0 mt-2 lg:mt-4 group relative">
             <div className="absolute right-2 top-2 flex items-center gap-1 z-10">
               <VoiceInputButton 
                 onTranscript={handleVoiceTranscript}
@@ -321,10 +321,10 @@ export default function MultiAIQuery() {
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Enter your prompt here... (Ctrl+Enter to submit, Escape to stop)"
-              className="mb-3 lg:mb-4 resize-none border-pink-300 focus-visible:ring-cyan-400 min-h-[100px] lg:min-h-[120px] max-h-[15vh] lg:max-h-[20vh] bg-indigo-900/40 dark:bg-gray-900/70 text-white placeholder:text-cyan-200/50 shadow-neon focus:shadow-neon-lg transition-shadow pr-20"
+              className="mb-3 lg:mb-4 resize-none border-pink-300 focus-visible:ring-cyan-400 flex-1 bg-indigo-900/40 dark:bg-gray-900/70 text-white placeholder:text-cyan-200/50 shadow-neon focus:shadow-neon-lg transition-shadow pr-20"
             />
             
-            <div className="flex gap-2 sticky bottom-0 query-button-sticky">
+            <div className="flex gap-2 flex-shrink-0 query-button-sticky">
               <Button 
                 type="submit" 
                 className="w-full enhanced-button bg-gradient-to-r from-pink-500 to-cyan-500 hover:from-pink-600 hover:to-cyan-600 transition-all duration-300 shadow-neon hover:shadow-neon-lg disabled:opacity-50 disabled:pointer-events-none disabled:shadow-none text-sm lg:text-base"
