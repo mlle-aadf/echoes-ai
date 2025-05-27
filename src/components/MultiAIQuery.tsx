@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
@@ -205,13 +204,21 @@ export default function MultiAIQuery() {
   };
 
   const getLayoutClass = () => {
-    switch (viewLayout) {
-      case "columns":
-        return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
-      case "rows":
-        return "grid-cols-1";
-      default:
-        return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
+    const expandedCount = expandedCards.length;
+    
+    if (viewLayout === "rows") {
+      return "grid-cols-1";
+    }
+    
+    // Dynamic grid based on expanded cards count for better space utilization
+    if (expandedCount <= 1) {
+      return "grid-cols-1";
+    } else if (expandedCount === 2) {
+      return "grid-cols-1 md:grid-cols-2";
+    } else if (expandedCount === 3) {
+      return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3";
+    } else {
+      return "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
     }
   };
 
@@ -252,7 +259,7 @@ export default function MultiAIQuery() {
         </div>
         
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 flex-1 max-h-[calc(100vh-150px)]">
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-4">
             <div className="custom-scrollbar">
               <ModelSelector 
                 availableModels={availableModels} 
@@ -260,12 +267,12 @@ export default function MultiAIQuery() {
                 onToggleModel={toggleModel}
               />
             </div>
-          </div>
 
-          <TaskSelector
-            availableModels={availableModels}
-            onSelectTask={handleTaskSelect}
-          />
+            <TaskSelector
+              availableModels={availableModels}
+              onSelectTask={handleTaskSelect}
+            />
+          </div>
 
           <div className="flex flex-col min-h-0 mt-4 group relative">
             <div className="absolute right-2 top-2 flex items-center justify-center p-2 rounded-md bg-indigo-900/50 text-cyan-300 z-10 opacity-0 group-focus-within:opacity-100 transition-opacity">
@@ -315,7 +322,7 @@ export default function MultiAIQuery() {
       <div className="flex-1 p-4 lg:p-6 flex flex-col gap-4 relative overflow-hidden">
         <div 
           ref={responsesContainerRef}
-          className={`grid gap-4 ${getLayoutClass()} flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar`}
+          className={`grid gap-4 ${getLayoutClass()} flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar auto-rows-max`}
         >
           {isLoading ? (
             selectedModels.map((modelId) => (
@@ -335,7 +342,7 @@ export default function MultiAIQuery() {
               return (
                 <div 
                   key={modelId} 
-                  className={`${isExpanded ? 'min-h-[200px]' : 'h-auto'} ${isMaximized ? 'col-span-full row-span-full' : ''}`}
+                  className={`${isExpanded ? 'min-h-[200px]' : 'h-auto'} ${isMaximized ? 'col-span-full row-span-full' : ''} transition-all duration-300`}
                   style={{ zIndex: isMaximized ? 10 : 1 }}
                 >
                   <ResponseCard
