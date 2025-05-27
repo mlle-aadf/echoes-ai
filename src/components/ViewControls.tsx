@@ -2,14 +2,17 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { ViewLayout } from "@/lib/types";
+import { ViewLayout, AIResponse } from "@/lib/types";
 import { Columns, Rows, RefreshCw } from "lucide-react";
+import ExportDropdown from "./ExportDropdown";
 
 interface ViewControlsProps {
   viewLayout: ViewLayout;
   setViewLayout: (layout: ViewLayout) => void;
   onRefresh: () => void;
   isLoading: boolean;
+  prompt?: string;
+  responses?: AIResponse[];
 }
 
 export default function ViewControls({
@@ -17,6 +20,8 @@ export default function ViewControls({
   setViewLayout,
   onRefresh,
   isLoading,
+  prompt = "",
+  responses = [],
 }: ViewControlsProps) {
   return (
     <Card className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-purple-100 dark:border-gray-700 shadow-md">
@@ -59,24 +64,27 @@ export default function ViewControls({
           </TooltipProvider>
         </div>
 
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                disabled={isLoading}
-                onClick={onRefresh}
-                className="ml-2"
-              >
-                <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Refresh Results</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <div className="flex items-center gap-2">
+          <ExportDropdown prompt={prompt} responses={responses} disabled={isLoading} />
+          
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  disabled={isLoading}
+                  onClick={onRefresh}
+                >
+                  <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Refresh Results</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
       </CardContent>
     </Card>
   );

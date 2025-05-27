@@ -1,19 +1,22 @@
+
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { usePuter } from "@/hooks/usePuter";
 import { queryClaude, queryDeepseek, queryGemini, queryGemma, queryGrok, queryLlama, queryMistral, queryOpenAI } from "@/lib/ai-clients";
 import { AIModel, AIResponse, ViewLayout } from "@/lib/types";
 import { Loader, MessageSquare, Search, Sparkles, StopCircle } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { ThemeToggle } from "./ThemeToggle";
 import { CommandPalette } from "./CommandPalette";
 import ModelSelector from "./ModelSelector";
 import ResponseCard from "./ResponseCard";
 import SettingsDropdown from "./SettingsDropdown";
 import TaskSelector from "./TaskSelector";
+import ViewControls from "./ViewControls";
+import VoiceInputButton from "./VoiceInputButton";
 
 export default function MultiAIQuery() {
   const [prompt, setPrompt] = useState("");
@@ -28,6 +31,7 @@ export default function MultiAIQuery() {
   const [abortController, setAbortController] = useState<AbortController | null>(null);
   const [loadingText, setLoadingText] = useState("Querying...");
   const responsesContainerRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const loadingPhrases = [
     "Powering up processors...",
@@ -57,6 +61,26 @@ export default function MultiAIQuery() {
       responsesContainerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [responses, isLoading]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key === 'Enter') {
+        e.preventDefault();
+        if (!isLoading && prompt.trim() && selectedModels.length > 0) {
+          queryModels();
+        }
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        if (isLoading) {
+          stopQuery();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isLoading, prompt, selectedModels]);
 
   const availableModels: AIModel[] = [
     { id: "gpt4", name: "GPT-4", queryFn: queryOpenAI },
@@ -203,6 +227,13 @@ export default function MultiAIQuery() {
     setSelectedModels(modelIds);
   };
 
+  const handleVoiceTranscript = useCallback((transcript: string) => {
+    setPrompt(prev => prev + transcript);
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, []);
+
   const getLayoutClass = () => {
     const expandedCount = expandedCards.length;
     
@@ -241,13 +272,13 @@ export default function MultiAIQuery() {
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen w-full overflow-hidden bg-gradient-to-br from-purple-800 to-indigo-900 dark:from-gray-900 dark:to-gray-800 vaporwave-bg">
-      <div className="w-full lg:w-1/4 p-4 lg:p-6 flex flex-col gap-4 neon-card lg:max-h-screen overflow-y-auto custom-scrollbar">
+      <div className="w-full lg:w-1/4 p-3 lg:p-6 flex flex-col gap-3 lg:gap-4 neon-card lg:max-h-screen overflow-y-auto custom-scrollbar">
         <div className="flex items-center justify-between mb-2">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-cyan-400 bg-clip-text text-transparent flex items-center gap-2 omnibot-title tracking-wider">
-            <Sparkles className="h-6 w-6 text-pink-500" />
+          <h1 className="text-xl lg:text-2xl font-bold bg-gradient-to-r from-pink-500 to-cyan-400 bg-clip-text text-transparent flex items-center gap-2 omnibot-title tracking-wider">
+            <Sparkles className="h-5 w-5 lg:h-6 lg:w-6 text-pink-500" />
             OmniBot
           </h1>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 lg:gap-2">
             <CommandPalette 
               onSelectTheme={(theme) => document.documentElement.classList.toggle("dark", theme === "dark")}
               onSelectAction={handleCommandAction}
@@ -258,9 +289,9 @@ export default function MultiAIQuery() {
           </div>
         </div>
         
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 flex-1 max-h-[calc(100vh-150px)]">
-          <div className="flex flex-col gap-4">
-            <div className="custom-scrollbar">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3 lg:gap-4 flex-1 max-h-[calc(100vh-120px)] lg:max-h-[calc(100vh-150px)]">
+          <div className="flex flex-col gap-3 lg:gap-4">
+            <div className="custom-scrollbar max-h-[30vh] lg:max-h-none overflow-y-auto">
               <ModelSelector 
                 availableModels={availableModels} 
                 selectedModels={selectedModels}
@@ -274,22 +305,29 @@ export default function MultiAIQuery() {
             />
           </div>
 
-          <div className="flex flex-col min-h-0 mt-4 group relative">
-            <div className="absolute right-2 top-2 flex items-center justify-center p-2 rounded-md bg-indigo-900/50 text-cyan-300 z-10 opacity-0 group-focus-within:opacity-100 transition-opacity">
-              <Search className="h-4 w-4" />
+          <div className="flex flex-col min-h-0 mt-2 lg:mt-4 group relative">
+            <div className="absolute right-2 top-2 flex items-center gap-1 z-10">
+              <VoiceInputButton 
+                onTranscript={handleVoiceTranscript}
+                disabled={isLoading}
+              />
+              <div className="flex items-center justify-center p-2 rounded-md bg-indigo-900/50 text-cyan-300 opacity-0 group-focus-within:opacity-100 transition-opacity">
+                <Search className="h-4 w-4" />
+              </div>
             </div>
             
             <Textarea
+              ref={textareaRef}
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Enter your prompt here..."
-              className="mb-4 resize-none border-pink-300 focus-visible:ring-cyan-400 min-h-[120px] max-h-[20vh] bg-indigo-900/40 dark:bg-gray-900/70 text-white placeholder:text-cyan-200/50 shadow-neon focus:shadow-neon-lg transition-shadow"
+              placeholder="Enter your prompt here... (Ctrl+Enter to submit, Escape to stop)"
+              className="mb-3 lg:mb-4 resize-none border-pink-300 focus-visible:ring-cyan-400 min-h-[100px] lg:min-h-[120px] max-h-[15vh] lg:max-h-[20vh] bg-indigo-900/40 dark:bg-gray-900/70 text-white placeholder:text-cyan-200/50 shadow-neon focus:shadow-neon-lg transition-shadow pr-20"
             />
             
             <div className="flex gap-2 sticky bottom-0 query-button-sticky">
               <Button 
                 type="submit" 
-                className="w-full enhanced-button bg-gradient-to-r from-pink-500 to-cyan-500 hover:from-pink-600 hover:to-cyan-600 transition-all duration-300 shadow-neon hover:shadow-neon-lg disabled:opacity-50 disabled:pointer-events-none disabled:shadow-none"
+                className="w-full enhanced-button bg-gradient-to-r from-pink-500 to-cyan-500 hover:from-pink-600 hover:to-cyan-600 transition-all duration-300 shadow-neon hover:shadow-neon-lg disabled:opacity-50 disabled:pointer-events-none disabled:shadow-none text-sm lg:text-base"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -319,14 +357,25 @@ export default function MultiAIQuery() {
         </form>
       </div>
 
-      <div className="flex-1 p-4 lg:p-6 flex flex-col gap-4 relative overflow-hidden">
+      <div className="flex-1 p-3 lg:p-6 flex flex-col gap-3 lg:gap-4 relative overflow-hidden">
+        {(responses.length > 0 || isLoading) && (
+          <ViewControls
+            viewLayout={viewLayout}
+            setViewLayout={setViewLayout}
+            onRefresh={queryModels}
+            isLoading={isLoading}
+            prompt={prompt}
+            responses={responses}
+          />
+        )}
+        
         <div 
           ref={responsesContainerRef}
-          className={`grid gap-4 ${getLayoutClass()} flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar auto-rows-max`}
+          className={`grid gap-3 lg:gap-4 ${getLayoutClass()} flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar auto-rows-max`}
         >
           {isLoading ? (
             selectedModels.map((modelId) => (
-              <div key={modelId} className="min-h-[200px]">
+              <div key={modelId} className="min-h-[150px] lg:min-h-[200px]">
                 <Skeleton className="h-full w-full bg-indigo-900/40 animate-pulse gradient-border" />
               </div>
             ))
@@ -342,7 +391,7 @@ export default function MultiAIQuery() {
               return (
                 <div 
                   key={modelId} 
-                  className={`${isExpanded ? 'min-h-[200px]' : 'h-auto'} ${isMaximized ? 'col-span-full row-span-full' : ''} transition-all duration-300`}
+                  className={`${isExpanded ? 'min-h-[150px] lg:min-h-[200px]' : 'h-auto'} ${isMaximized ? 'col-span-full row-span-full' : ''} transition-all duration-300`}
                   style={{ zIndex: isMaximized ? 10 : 1 }}
                 >
                   <ResponseCard
