@@ -43,5 +43,6 @@ Pull requests are welcome! Open an issue for feature requests or bug reports.
 ## 🛡️ License
 MIT License. See `LICENSE` for details.
 
-![echoes](https://github.com/user-attachments/assets/f3054bf6-3c6c-439a-9667-e3f13e69893c)
+![echoes](https://github.com/user-attachments/assets/f425b533-0132-4729-bb2f-b35069f69720)
+
 
