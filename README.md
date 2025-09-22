@@ -43,6 +43,8 @@ Pull requests are welcome! Open an issue for feature requests or bug reports.
 ## 🛡️ License
 MIT License. See `LICENSE` for details.
 
-![echoes](https://github.com/user-attachments/assets/f425b533-0132-4729-bb2f-b35069f69720)
+[![App Demo](https://github.com/user-attachments/assets/f425b533-0132-4729-bb2f-b35069f69720)](https://echoes-ai.vercel.app/)
+
+
 
 
