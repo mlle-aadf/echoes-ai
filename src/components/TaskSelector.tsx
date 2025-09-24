@@ -1,6 +1,6 @@
 
 import { Card, CardContent } from "@/components/ui/card";
-import { tasks, preselectModelsForTask } from "@/lib/taskData";
+import { preselectModelsForTask, tasks } from "@/lib/taskData";
 import { AIModel } from "@/lib/types";
 import { LightbulbIcon } from "lucide-react";
 import { Button } from "./ui/button";
@@ -24,7 +24,7 @@ export default function TaskSelector({
       <CardContent className="p-4">
         <h4 className="text-lg font-semibold mb-3 text-cyan-300 dark:text-cyan-400 flex items-center gap-2 retro-text whitespace-nowrap overflow-hidden text-ellipsis">
           <LightbulbIcon className="h-4 w-4 text-pink-500 pixel-art" />
-          Suggested Tasks
+          Tasks
         </h4>
         <div className="grid grid-cols-2 gap-2 max-h-[calc(50vh-80px)] overflow-y-auto pr-2 custom-scrollbar">
           {tasks.map((task) => (
