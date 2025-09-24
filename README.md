@@ -1,4 +1,4 @@
-# 🚀 Multi-AI Query Tool (WIP)
+# 🚀 OmniBot (WIP)
 
 A web app that allows users to send the same prompt to multiple AI models simultaneously and compare responses.
 
